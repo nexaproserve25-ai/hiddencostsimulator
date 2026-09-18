@@ -9,6 +9,8 @@ import {
   type Habit, type HabitFrequency, type IncomeMode, type RealityCheckState,
 } from '@/lib/realityCheck';
 
+import { UpgradePanel } from '@/components/UpgradePanel';
+
 type Lang = 'en' | 'ar';
 
 const t = {
@@ -430,6 +432,9 @@ function RealityCheckResult({ state, result, lang, onLanguage, onRestart, onHome
           <RCButton onClick={downloadCard} disabled={downloading} className="flex-1"><Copy size={17} />{downloading ? ct.downloading : ct.download}</RCButton>
           <RCButton onClick={() => setShowShare(true)} secondary className="flex-1"><Share2 size={17} />{ct.share}</RCButton>
         </div>
+
+        {/* Premium upgrade section (spec 10 & 14) */}
+        <UpgradePanel lang={lang} onUnlocked={onHome} />
         <div className="flex flex-col items-center gap-2">
           <button onClick={onRestart} className="mt-4 flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white"><RotateCcw size={14} />{ct.startOver}</button>
           <button onClick={onHome} className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-white"><ArrowLeft size={14} style={{ transform: isAr ? 'scaleX(-1)' : 'none' }} />{ct.backHome}</button>
