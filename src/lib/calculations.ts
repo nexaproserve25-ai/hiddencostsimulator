@@ -89,8 +89,62 @@ export function calculateResult(state: SimulatorState): SimulationResult | null 
   }
   const cost = state.decisionType === 'purchase' ? state.price : state.cost;
   const duration = state.decisionType === 'entertainment' ? state.durationHours : 0;
+  const financialWorkHours = hourlyIncome > 0 ? cost / hourlyIncome : 0;
   const financialScore = calculateFinancialScore(cost, state.monthlyIncome);
   const timeScore = calculateTimeScore(duration, weeklyFreeHours);
   const score = clampScore(financialScore * .35 + timeScore * .35 + motivationScore * .30);
-  return { score, level: levelFor(score, state.decisionType), decisionType: state.decisionType, motivation: state.motivation, currency: state.currency, financialScore, timeScore, motivationScore, hourlyIncome, weeklyFreeHours, financialWorkHours: hourlyIncome > 0 ? cost / hourlyIncome : 0, timeConsumptionPercent: Math.min(100, duration / weeklyFreeHours * 100), titleKey: titleFor(state.decisionType, state.motivation) };
+  const STANDARD_WEEKLY_FREE_HOURS = 40;
+  const entertainmentTimePct = weeklyFreeHours > 0 ? Math.min(100, duration / weeklyFreeHours * 100) : 0;
+  const workHoursTimePct = Math.min(100, financialWorkHours / STANDARD_WEEKLY_FREE_HOURS * 100);
+  const timeConsumptionPercent = state.decisionType === 'entertainment' ? Math.max(entertainmentTimePct, workHoursTimePct) : workHoursTimePct;
+  return { score, level: levelFor(score, state.decisionType), decisionType: state.decisionType, motivation: state.motivation, currency: state.currency, financialScore, timeScore, motivationScore, hourlyIncome, weeklyFreeHours, financialWorkHours, timeConsumptionPercent, titleKey: titleFor(state.decisionType, state.motivation) };
+}
+
+export interface BreakdownData { basePrice: number; hiddenTimeCost: number; opportunityCost: number; baseLabel: string; hiddenLabel: string; opportunityLabel: string; }
+
+export function getBreakdownData(result: SimulationResult, state: SimulatorState): BreakdownData {
+  const basePrice = state.decisionType === 'purchase' ? state.price : state.decisionType === 'entertainment' ? state.cost : state.extraIncome;
+  const workHours = result.financialWorkHours ?? 0;
+  const hourly = result.hourlyIncome > 0 ? result.hourlyIncome : 1;
+  const hiddenTimeCost = workHours * hourly * (result.motivationScore / 100);
+  const opportunityCost = basePrice * (Math.pow(1.07, 5) - 1);
+  return {
+    basePrice: Math.round(basePrice),
+    hiddenTimeCost: Math.round(hiddenTimeCost),
+    opportunityCost: Math.round(opportunityCost),
+    baseLabel: 'Base Price',
+    hiddenLabel: 'Hidden Time Cost',
+    opportunityLabel: 'Opportunity Cost (5yr)',
+  };
+}
+
+function humanizeWorkHours(workHours: number, language: 'en' | 'ar'): string {
+  if (workHours <= 0) return language === 'ar' ? 'وقتك' : 'your time';
+  const workdays = workHours / 8;
+  const isAr = language === 'ar';
+  if (workdays < 1) return isAr ? `${workHours} ساعة من العمل` : `${workHours} hours of labor`;
+  if (workdays === Math.floor(workdays)) return isAr ? `${workdays} يوم عمل` : `${workdays} workday${workdays > 1 ? 's' : ''}`;
+  const rounded = Math.round(workdays * 10) / 10;
+  return isAr ? `${rounded} يوم عمل` : `${rounded} workdays`;
+}
+
+export function generateQuote(result: SimulationResult, language: 'en' | 'ar'): { text: string; source: 'en' | 'ar' } {
+  const workHours = Math.round(result.financialWorkHours ?? 0);
+  const freeTimePct = Math.round(result.timeConsumptionPercent ?? 0);
+  const isAr = language === 'ar';
+  const lifePhrase = humanizeWorkHours(workHours, language);
+  if (result.decisionType === 'extra_work') {
+    const monthlyEq = result.monthlyEquivalent ?? 0;
+    const hrs = Math.round(result.timeConsumptionPercent ?? 0);
+    if (isAr) return { text: `هل تبيع ${hrs}٪ من وقت فراغك مقابل ${Math.round(monthlyEq)} شهرياً، أم تشتري المال بأسبوعك؟`, source: 'ar' };
+    return { text: `Are you selling ${hrs}% of your free time for ${Math.round(monthlyEq)}/month, or buying money with your week?`, source: 'en' };
+  }
+  if (isAr) {
+    if (workHours > 0 && freeTimePct > 0) return { text: `هل تشتري هذا بـ${lifePhrase} من حياتك، أم تتاجر بساعات عملك للحصول عليه؟ ${freeTimePct}٪ من وقت فراغك هو الثمن الحقيقي.`, source: 'ar' };
+    if (workHours > 0) return { text: `هذا الغرض يكلفك ${lifePhrase}. هل تستبدل وقت حياتك بلحظات عابرة من المتعة؟`, source: 'ar' };
+    return { text: `كل ما تشتريه يُدفع بساعات من حياتك — وليس فقط بمالك.`, source: 'ar' };
+  }
+  if (workHours > 0 && freeTimePct > 0) return { text: `Are you buying this with ${lifePhrase} of your life, or trading hours of work to own it? ${freeTimePct}% of your free time is the real price.`, source: 'en' };
+  if (workHours > 0) return { text: `This purchase costs you ${lifePhrase}. Are you trading a piece of your life for a fleeting moment of joy?`, source: 'en' };
+  return { text: `Everything you buy is paid for with hours of your life — not just money.`, source: 'en' };
 }

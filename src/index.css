@@ -21,4 +21,6 @@ input[type='number'] { -moz-appearance: textfield; }
 @keyframes reveal { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 .float-card { animation: float 5s ease-in-out infinite; }
 .reveal { animation: reveal .45s ease both; }
+@keyframes fade-in { from { opacity: 0; transform: translate(-50%, 10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+.animate-fade-in { animation: fade-in .3s ease both; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
