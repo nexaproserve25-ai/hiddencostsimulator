@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import { isPaymentCompleted, clearPaymentSession } from '@/services/paymentService';
+import { confirmStoredEntitlement, clearPaymentSession } from '@/services/paymentService';
 
 // ============================================================================
 // FEATURE ACCESS SYSTEM — centralized permission object
@@ -71,13 +71,15 @@ const PaymentContext = createContext<PaymentContextValue | null>(null);
 export function PaymentProvider({ children }: { children: ReactNode }) {
   const [paymentStatus, setPaymentStatusState] = useState<PaymentStatus>('LOCKED');
 
-  // On mount, restore access ONLY from a payment session that the verification
-  // step marked completed. No standalone "unlocked" flag is honoured, because a
-  // value the browser can write is not proof of purchase.
+  // On mount, restore access only if an authority OUTSIDE the browser confirms
+  // the stored session was really paid. Storage is used to decide which session
+  // to ask about, never as the answer, because the browser writes it itself.
   useEffect(() => {
-    if (isPaymentCompleted()) {
-      setPaymentStatusState('PAID');
-    }
+    let cancelled = false;
+    confirmStoredEntitlement()
+      .then((paid) => { if (!cancelled && paid) setPaymentStatusState('PAID'); })
+      .catch(() => { /* unconfirmed: stay locked */ });
+    return () => { cancelled = true; };
   }, []);
 
   const featureAccess: FeatureAccess = paymentStatus === 'PAID' ? PRO_ACCESS : FREE_ACCESS;

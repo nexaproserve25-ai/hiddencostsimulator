@@ -169,26 +169,17 @@ export function createCheckoutSession(plan: Plan): { session: PaymentSession } |
  * The simulated unlock is confined to a local development build.
  */
 export async function handlePaymentSuccess(
-  sessionId: string,
+  sessionId?: string | null,
 ): Promise<{ verified: boolean } | { error: PaymentError }> {
   const session = readSession();
-
-  if (!sessionId || !isWellFormedSessionId(sessionId) || !session || session.id !== sessionId) {
-    return {
-      error: {
-        type: 'UNKNOWN',
-        message: 'Unexpected payment error.',
-      },
-    };
-  }
-
   const verifyUrl = getVerifyUrl();
+  const provider = getProvider();
 
-  if (verifyUrl) {
+  // If a verification endpoint is configured, it is the sole authority.
+  if (verifyUrl && sessionId && isWellFormedSessionId(sessionId) && session && session.id === sessionId) {
     const paid = await verifyLicense(verifyUrl, sessionId);
     if (!paid) {
-      session.status = 'failed';
-      persistSession(session);
+      if (session) { session.status = 'failed'; persistSession(session); }
       return {
         error: {
           type: 'FAILED',
@@ -201,20 +192,26 @@ export async function handlePaymentSuccess(
     return { verified: true };
   }
 
-  if (simulationAllowed()) {
-    // Local development only — no deployed build reaches this branch.
+  // Development simulation only — never reachable in a production build.
+  if (simulationAllowed() && sessionId && session && session.id === sessionId) {
     session.status = 'completed';
     persistSession(session);
     return { verified: true };
   }
 
-  // No verification authority available: fail closed rather than grant access.
-  session.status = 'failed';
-  persistSession(session);
+  // A return to the success page is NOT proof of payment. The browser reaches
+  // this page by navigating to it, and `status === 'redirected'` was written by
+  // this same browser before it left for the provider, so neither fact can
+  // authorize anything. Without a verification authority outside the browser
+  // there is nothing left to check, so fail closed.
+  void provider;
+
+  // No session to correlate and no verification authority: fail closed.
+  if (session) { session.status = 'failed'; persistSession(session); }
   return {
     error: {
-      type: 'FAILED',
-      message: 'We couldn\'t complete your payment. Please try again.',
+      type: 'UNKNOWN',
+      message: 'Unexpected payment error.',
     },
   };
 }
@@ -240,6 +237,26 @@ async function verifyLicense(verifyUrl: string, sessionId: string): Promise<bool
 }
 
 /**
+ * Records a checkout session for the return flow, then navigates straight to the
+ * provider's checkout page. The session is what lets the success page correlate
+ * the return with a verification request; without it a genuine buyer cannot be
+ * confirmed. Navigation is a direct assignment so no router state is involved.
+ */
+export function beginCheckoutAndRedirect(plan: Plan, checkoutUrl: string): void {
+  try {
+    const session: PaymentSession = {
+      id: generateSessionId(),
+      provider: getProvider(),
+      plan,
+      status: 'redirected',
+      createdAt: new Date(),
+    };
+    persistSession(session);
+  } catch { /* storage unavailable: continue to checkout regardless */ }
+  window.location.href = checkoutUrl;
+}
+
+/**
  * Handles the payment cancel return flow.
  */
 export function handlePaymentCancel(): void {
@@ -251,15 +268,24 @@ export function handlePaymentCancel(): void {
 }
 
 /**
- * Checks whether a payment session has been completed.
- * In production, this will query the backend license status instead.
+ * Re-confirms a stored entitlement at startup.
  *
- * NOTE: This is NOT proof of purchase (see security rule 12).
- * Backend verification is the source of truth.
+ * A session object in browser storage is written by the browser itself, so
+ * `status === 'completed'` inside it is a claim, not proof. It is therefore used
+ * only to find WHICH session to ask about; the answer comes from the
+ * verification endpoint. With no endpoint configured there is no authority to
+ * ask, so nothing is granted (outside a local development build).
  */
-export function isPaymentCompleted(): boolean {
+export async function confirmStoredEntitlement(): Promise<boolean> {
   const session = readSession();
-  return session?.status === 'completed';
+  if (!session || session.status !== 'completed') return false;
+  if (!isWellFormedSessionId(session.id)) return false;
+
+  const verifyUrl = getVerifyUrl();
+  if (verifyUrl) return verifyLicense(verifyUrl, session.id);
+
+  // Development simulation only — never reachable in a production build.
+  return simulationAllowed();
 }
 
 /**
@@ -282,18 +308,31 @@ export function clearPaymentSession(): void {
 const SESSION_KEY = 'hcs-payment-session';
 
 function generateSessionId(): string {
-  return 'ps_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  // Cryptographically strong: this id is the value a verification endpoint is
+  // asked about, so a guessable id would let one visitor claim another's
+  // purchase. Falls back to a weaker scheme only where Web Crypto is missing.
+  try {
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    let out = '';
+    for (const b of bytes) out += b.toString(16).padStart(2, '0');
+    return 'ps_' + out;
+  } catch {
+    return 'ps_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
 }
 
 function persistSession(session: PaymentSession): void {
   try {
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    const json = JSON.stringify(session);
+    sessionStorage.setItem(SESSION_KEY, json);
+    localStorage.setItem(SESSION_KEY, json);
   } catch { /* storage unavailable */ }
 }
 
 function readSession(): PaymentSession | null {
   try {
-    const raw = sessionStorage.getItem(SESSION_KEY);
+    const raw = sessionStorage.getItem(SESSION_KEY) ?? localStorage.getItem(SESSION_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as PaymentSession;
     parsed.createdAt = new Date(parsed.createdAt);

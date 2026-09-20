@@ -8,7 +8,7 @@ interface LegalPageProps {
 }
 
 const LAST_UPDATED = 'September 20, 2026';
-const CONTACT_EMAIL = 'nexa.proserve25@gmail.com';
+const CONTACT_EMAIL = 'support@hiddencostsimulator.com';
 
 function LegalShell({ lang, onHome, title, icon: Icon, children }: { lang: Lang; onHome: () => void; title: string; icon: typeof Shield; children: React.ReactNode }) {
   const isAr = lang === 'ar';

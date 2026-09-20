@@ -19,6 +19,7 @@ import {
 import { ProResultsV3 } from '@/components/ProResultsV3';
 import { usePayment, FREE_HABIT_LIMIT } from '@/context/PaymentContext';
 import { UpgradePanel } from '@/components/UpgradePanel';
+import { createCheckoutSession, beginCheckoutAndRedirect } from '@/services/paymentService';
 
 // ============================================================================
 // SHARED TYPES
@@ -154,6 +155,8 @@ export function HiddenCostPro({ language, onHome, onLanguage }: { language: ProL
 
   // Download report as a PDF file directly to the user's device
   const handleDownload = async () => {
+    // Re-check entitlement at the moment of the action, not only at render time.
+    if (!canAccess('pdfReport')) return;
     const reportEl = document.querySelector('[data-pro-report]') as HTMLElement | null;
     if (!reportEl) return;
     setDownloading(true);
@@ -183,9 +186,13 @@ export function HiddenCostPro({ language, onHome, onLanguage }: { language: ProL
           <ProHeader lang={language} onHome={onHome} onLanguage={onLanguage} />
           <div className="flex flex-1 flex-col items-center justify-center px-5 py-8" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
             <div className="max-w-md text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#b4ff3a]/30 bg-[#b4ff3a]/10">
-                <Lock size={32} className="text-[#b4ff3a]" />
-              </div>
+              <button
+                onClick={() => { beginCheckoutAndRedirect('pro', 'https://hidden-cost-simulator.lemonsqueezy.com/checkout/buy/d2dadac1-c82f-44be-afbc-ce168e182e6b'); }}
+                aria-label={isAr ? 'افتح برو — التحليل الكامل' : 'Unlock Pro — Full Analysis'}
+                className="group mx-auto mb-4 flex h-16 w-16 cursor-pointer items-center justify-center rounded-2xl border border-[#b4ff3a]/30 bg-[#b4ff3a]/10 transition hover:-translate-y-1 hover:border-[#b4ff3a]/60 hover:bg-[#b4ff3a]/20 hover:shadow-[0_0_30px_rgba(180,255,58,.2)] focus:outline-none focus:ring-2 focus:ring-[#b4ff3a] focus:ring-offset-2 focus:ring-offset-[#07121c]"
+              >
+                <Lock size={32} className="text-[#b4ff3a] transition group-hover:scale-110" />
+              </button>
               <h1 className="font-display text-xl font-extrabold text-white">
                 {isAr ? 'تحليلك جاهز — افتح برو لرؤيته' : 'Your analysis is ready — unlock Pro to see it'}
               </h1>
@@ -332,9 +339,9 @@ export function HiddenCostPro({ language, onHome, onLanguage }: { language: ProL
                   <Plus size={18} /> {t.addHabit}
                 </button>
               ) : (
-                <div className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-white/10 py-3 text-sm font-semibold text-slate-500">
+                <button onClick={() => createCheckoutSession('pro')} className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-[#b4ff3a]/40 py-3 text-sm font-semibold text-[#b4ff3a] transition hover:border-[#b4ff3a]/70 hover:bg-[#b4ff3a]/5">
                   <Lock size={16} /> {language === 'ar' ? `حد العادات المجانية (${FREE_HABIT_LIMIT}) — افتح برو لعادات غير محدودة` : `Free habit limit (${FREE_HABIT_LIMIT}) — Unlock Pro for unlimited habits`}
-                </div>
+                </button>
               )}
             </section>
           )}
