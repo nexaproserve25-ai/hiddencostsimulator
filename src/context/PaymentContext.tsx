@@ -1,12 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import { confirmStoredEntitlement, clearPaymentSession } from '@/services/paymentService';
-
-// ============================================================================
-// FEATURE ACCESS SYSTEM — centralized permission object
-//
-// The UI checks feature permissions rather than payment flags.
-// This supports future subscription tiers without code duplication.
-// ============================================================================
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/context/AuthContext';
 
 export interface FeatureAccess {
   pdfReport: boolean;
@@ -18,7 +12,6 @@ export interface FeatureAccess {
   unlimitedHabits: boolean;
 }
 
-// Free tier: all premium features locked
 const FREE_ACCESS: FeatureAccess = {
   pdfReport: false,
   wealthSimulation: false,
@@ -29,7 +22,6 @@ const FREE_ACCESS: FeatureAccess = {
   unlimitedHabits: false,
 };
 
-// Pro tier: all features unlocked
 const PRO_ACCESS: FeatureAccess = {
   pdfReport: true,
   wealthSimulation: true,
@@ -40,10 +32,6 @@ const PRO_ACCESS: FeatureAccess = {
   unlimitedHabits: true,
 };
 
-// ============================================================================
-// PAYMENT STATE
-// ============================================================================
-
 export type PaymentStatus = 'LOCKED' | 'PENDING' | 'PROCESSING' | 'PAID' | 'FAILED' | 'CANCELLED';
 
 export interface PaymentState {
@@ -52,55 +40,47 @@ export interface PaymentState {
 }
 
 interface PaymentContextValue extends PaymentState {
-  /** Unlocks all Pro features. Only the verified payment return flow may call this. */
   unlockPro: () => void;
-  /** Locks all features back to free tier */
   lockPro: () => void;
-  /** Sets a specific payment status without changing feature access */
   setPaymentStatus: (status: PaymentStatus) => void;
-  /** Checks a single feature permission */
   canAccess: (feature: keyof FeatureAccess) => boolean;
 }
-
-// ============================================================================
-// CONTEXT
-// ============================================================================
 
 const PaymentContext = createContext<PaymentContextValue | null>(null);
 
 export function PaymentProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
   const [paymentStatus, setPaymentStatusState] = useState<PaymentStatus>('LOCKED');
 
-  // On mount, restore access only if an authority OUTSIDE the browser confirms
-  // the stored session was really paid. Storage is used to decide which session
-  // to ask about, never as the answer, because the browser writes it itself.
   useEffect(() => {
     let cancelled = false;
-    confirmStoredEntitlement()
-      .then((paid) => { if (!cancelled && paid) setPaymentStatusState('PAID'); })
-      .catch(() => { /* unconfirmed: stay locked */ });
+
+    async function checkEntitlement() {
+      if (!user) {
+        setPaymentStatusState('LOCKED');
+        return;
+      }
+
+      const { data, error } = await supabase.rpc('has_active_entitlement');
+      if (cancelled) return;
+      if (!error && data === true) {
+        setPaymentStatusState('PAID');
+      } else {
+        setPaymentStatusState('LOCKED');
+      }
+    }
+
+    checkEntitlement();
     return () => { cancelled = true; };
-  }, []);
+  }, [user]);
 
   const featureAccess: FeatureAccess = paymentStatus === 'PAID' ? PRO_ACCESS : FREE_ACCESS;
 
-  const unlockPro = () => {
-    // Called only after the payment service has verified the session.
-    setPaymentStatusState('PAID');
-  };
+  const unlockPro = () => setPaymentStatusState('PAID');
+  const lockPro = () => setPaymentStatusState('LOCKED');
+  const setPaymentStatus = (status: PaymentStatus) => setPaymentStatusState(status);
 
-  const lockPro = () => {
-    setPaymentStatusState('LOCKED');
-    clearPaymentSession();
-  };
-
-  const setPaymentStatus = (status: PaymentStatus) => {
-    setPaymentStatusState(status);
-  };
-
-  const canAccess = (feature: keyof FeatureAccess): boolean => {
-    return featureAccess[feature];
-  };
+  const canAccess = (feature: keyof FeatureAccess): boolean => featureAccess[feature];
 
   const value: PaymentContextValue = {
     paymentStatus,
@@ -114,20 +94,10 @@ export function PaymentProvider({ children }: { children: ReactNode }) {
   return <PaymentContext.Provider value={value}>{children}</PaymentContext.Provider>;
 }
 
-// ============================================================================
-// HOOK — components use this to check feature permissions
-// ============================================================================
-
 export function usePayment(): PaymentContextValue {
   const ctx = useContext(PaymentContext);
-  if (!ctx) {
-    throw new Error('usePayment must be used within a PaymentProvider');
-  }
+  if (!ctx) throw new Error('usePayment must be used within a PaymentProvider');
   return ctx;
 }
-
-// ============================================================================
-// HELPER — free habit limit for non-Pro users
-// ============================================================================
 
 export const FREE_HABIT_LIMIT = 3;

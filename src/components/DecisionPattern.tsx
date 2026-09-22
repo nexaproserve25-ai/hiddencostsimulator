@@ -47,32 +47,32 @@ export function DecisionPattern({ profile, lang }: { profile: HabitProfile; lang
   const Icon = info.icon;
 
   return (
-    <div className="rounded-2xl border border-cyan-400/25 bg-gradient-to-br from-cyan-400/[.06] to-[#0b1a28] p-5" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
+    <div className="rounded-2xl border border-cyan-200 bg-gradient-to-br from-cyan-50 to-white p-5" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
       <div className="flex items-center gap-3">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-400/15 text-cyan-300">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-400/15 text-cyan-600">
           <Brain size={26} />
         </span>
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[.18em] text-cyan-300" style={{ letterSpacing: isAr ? '0' : '.18em' }}>
+          <p className="text-[10px] font-bold uppercase tracking-[.18em] text-cyan-600" style={{ letterSpacing: isAr ? '0' : '.18em' }}>
             {isAr ? 'نمط القرار' : 'DECISION PATTERN'}
           </p>
-          <h3 className="font-display text-lg font-extrabold text-white" style={{ textAlign: isAr ? 'right' : 'left' }}>
+          <h3 className="font-display text-lg font-extrabold text-slate-950" style={{ textAlign: isAr ? 'right' : 'left' }}>
             {isAr ? info.nameAr : info.name}
           </h3>
         </div>
       </div>
 
       <div className="mt-4 flex items-center gap-2.5">
-        <Icon size={16} className="shrink-0 text-cyan-300" />
-        <p className="text-sm font-semibold text-slate-200" style={{ textAlign: isAr ? 'right' : 'left' }}>
+        <Icon size={16} className="shrink-0 text-cyan-600" />
+        <p className="text-sm font-semibold text-slate-800" style={{ textAlign: isAr ? 'right' : 'left' }}>
           {isAr ? info.taglineAr : info.tagline}
         </p>
       </div>
 
-      <div className="mt-4 rounded-xl border border-cyan-400/20 bg-cyan-400/[.06] p-4">
+      <div className="mt-4 rounded-xl border border-cyan-200 bg-cyan-50 p-4">
         <div className="flex items-start gap-2.5">
-          <AlertCircle size={16} className="mt-0.5 shrink-0 text-cyan-300" />
-          <p className="text-sm leading-6 text-slate-100" style={{ textAlign: isAr ? 'right' : 'left' }}>
+          <AlertCircle size={16} className="mt-0.5 shrink-0 text-cyan-600" />
+          <p className="text-sm leading-6 text-slate-800" style={{ textAlign: isAr ? 'right' : 'left' }}>
             "{quote}"
           </p>
         </div>

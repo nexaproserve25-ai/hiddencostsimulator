@@ -92,23 +92,23 @@ function RCField({ label, value, onChange, prefix, min = '0', lang }: { label: s
   const isAr = lang === 'ar';
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-semibold text-slate-200" style={{ textAlign: isAr ? 'right' : 'left' }}>{label}</span>
-      <div className="flex h-11 items-center rounded-xl border border-white/10 bg-[#0b1a28] px-3 transition focus-within:border-[#b4ff3a]">
-        {prefix && <span className={isAr ? 'ml-1.5 text-sm text-slate-400' : 'mr-1.5 text-sm text-slate-400'}>{prefix}</span>}
-        <input aria-label={label} type="number" min={min} value={value || ''} onChange={(e) => onChange(Number(e.target.value))} className="w-full bg-transparent text-base font-semibold text-white outline-none placeholder:text-slate-600" placeholder="0" style={{ direction: 'ltr', textAlign: isAr ? 'right' : 'left' }} />
+      <span className="mb-1.5 block text-xs font-semibold text-slate-800" style={{ textAlign: isAr ? 'right' : 'left' }}>{label}</span>
+      <div className="flex h-11 items-center rounded-xl border border-slate-200 bg-white px-3 transition focus-within:border-[#b4ff3a]">
+        {prefix && <span className={isAr ? 'ml-1.5 text-sm text-slate-600' : 'mr-1.5 text-sm text-slate-600'}>{prefix}</span>}
+        <input aria-label={label} type="number" min={min} value={value || ''} onChange={(e) => onChange(Number(e.target.value))} className="w-full bg-transparent text-base font-semibold text-slate-950 outline-none placeholder:text-slate-300" placeholder="0" style={{ direction: 'ltr', textAlign: isAr ? 'right' : 'left' }} />
       </div>
     </label>
   );
 }
 
 function RCButton({ children, onClick, secondary = false, className = '', disabled = false }: { children: React.ReactNode; onClick?: () => void; secondary?: boolean; className?: string; disabled?: boolean }) {
-  return <button type="button" onClick={onClick} disabled={disabled} className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold transition duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#b4ff3a] focus:ring-offset-2 focus:ring-offset-[#07121c] disabled:cursor-not-allowed disabled:opacity-40 ${secondary ? 'border border-white/15 bg-white/[.04] text-white hover:border-[#b4ff3a]/60' : 'bg-[#b4ff3a] text-[#07121b] shadow-[0_10px_30px_rgba(180,255,58,.16)] hover:bg-[#c4ff63]'} ${className}`}>{children}</button>;
+  return <button type="button" onClick={onClick} disabled={disabled} className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold transition duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#b4ff3a] focus:ring-offset-2 focus:ring-offset-[#f8f6f1] disabled:cursor-not-allowed disabled:opacity-40 ${secondary ? 'border border-slate-200 bg-white text-slate-800 shadow-sm hover:border-[#b4ff3a]/60' : 'bg-[#b4ff3a] text-[#07121b] shadow-[0_10px_30px_rgba(180,255,58,.16)] hover:bg-[#c4ff63]'} ${className}`}>{children}</button>;
 }
 
 function RCToggle({ options, value, onChange, lang }: { options: { id: string; label: string }[]; value: string; onChange: (v: string) => void; lang: Lang }) {
   return (
-    <div className="flex rounded-xl border border-white/10 bg-[#0b1a28] p-1" style={{ direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
-      {options.map((o) => (<button key={o.id} type="button" onClick={() => onChange(o.id)} className={`flex-1 rounded-lg py-2 text-xs font-bold transition ${value === o.id ? 'bg-[#b4ff3a] text-[#07121b]' : 'text-slate-400 hover:text-white'}`}>{o.label}</button>))}
+    <div className="flex rounded-xl border border-slate-200 bg-white p-1" style={{ direction: lang === 'ar' ? 'rtl' : 'ltr' }}>
+      {options.map((o) => (<button key={o.id} type="button" onClick={() => onChange(o.id)} className={`flex-1 rounded-lg py-2 text-xs font-bold transition ${value === o.id ? 'bg-[#b4ff3a] text-[#07121b]' : 'text-slate-600 hover:text-slate-950'}`}>{o.label}</button>))}
     </div>
   );
 }
@@ -125,13 +125,13 @@ function FrequencyPicker({ value, onChange, lang }: { value: HabitFrequency; onC
 function RCHeader({ lang, onLanguage, onHome }: { lang: Lang; onLanguage: () => void; onHome: () => void }) {
   const ct = t[lang]; const isAr = lang === 'ar';
   return (
-    <header className="relative z-10 shrink-0 border-b border-white/[.07]">
+    <header className="relative z-10 shrink-0 border-b border-slate-200/70 bg-white/60 backdrop-blur-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-2 lg:px-10 lg:py-2.5">
         <button onClick={onHome} aria-label="Hidden Cost home" className="flex items-center gap-2 text-left">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#b4ff3a] text-[#061019] shadow-[0_0_20px_rgba(180,255,58,.25)]"><Zap size={20} strokeWidth={3} fill="currentColor" /></span>
-          <span className="font-display leading-none"><strong className="block text-[15px] font-extrabold tracking-tight">{isAr ? 'التكلفة الخفية' : 'Hidden Cost'}</strong><small className="block pt-0.5 text-[10px] font-medium text-slate-300">{isAr ? 'فحص الواقع' : 'Reality Check'}</small></span>
+          <span className="font-display leading-none"><strong className="block text-[15px] font-extrabold tracking-tight text-slate-950">{isAr ? 'التكلفة الخفية' : 'Hidden Cost'}</strong><small className="block pt-0.5 text-[10px] font-semibold text-slate-600">{isAr ? 'فحص الواقع' : 'Reality Check'}</small></span>
         </button>
-        <button onClick={onLanguage} className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[.03] px-4 py-2 text-sm font-semibold hover:border-[#b4ff3a]/50" aria-label={ct.switchLang}><Globe2 size={17} /><span>{ct.langBtn}</span><ChevronDown size={14} /></button>
+        <button onClick={onLanguage} className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm hover:border-[#b4ff3a]/50" aria-label={ct.switchLang}><Globe2 size={17} /><span>{ct.langBtn}</span><ChevronDown size={14} /></button>
       </div>
     </header>
   );
@@ -146,10 +146,10 @@ function RealityCheckStep1({ state, setState, lang }: { state: RealityCheckState
   const symbol = currencies.find((c) => c.code === state.currency)?.symbol ?? '$';
   return (
     <section className="reveal space-y-4">
-      <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[.15em] text-[#b4ff3a]" style={{ textAlign: align }}>{ct.step1Label}</p>
+      <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[.15em] text-[#5a9a32]" style={{ textAlign: align }}>{ct.step1Label}</p>
       <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl" style={{ textAlign: align }}>{ct.step1Title}</h1>
-      <p className="text-sm text-slate-400" style={{ textAlign: align }}>{ct.step1Sub}</p>
-      <div><span className="mb-1.5 block text-xs font-semibold text-slate-200" style={{ textAlign: align }}>{ct.paidMode}</span><RCToggle lang={lang} options={[{ id: 'monthly', label: ct.monthly }, { id: 'hourly', label: ct.hourly }]} value={state.incomeMode} onChange={(v) => setState({ ...state, incomeMode: v as IncomeMode })} /></div>
+      <p className="text-sm text-slate-600" style={{ textAlign: align }}>{ct.step1Sub}</p>
+      <div><span className="mb-1.5 block text-xs font-semibold text-slate-800" style={{ textAlign: align }}>{ct.paidMode}</span><RCToggle lang={lang} options={[{ id: 'monthly', label: ct.monthly }, { id: 'hourly', label: ct.hourly }]} value={state.incomeMode} onChange={(v) => setState({ ...state, incomeMode: v as IncomeMode })} /></div>
       {state.incomeMode === 'hourly' ? (
         <RCField lang={lang} label={ct.hourlyWage} value={state.hourlyWage} onChange={(v) => setState({ ...state, hourlyWage: v })} prefix={symbol} min="0.01" />
       ) : (
@@ -157,7 +157,7 @@ function RealityCheckStep1({ state, setState, lang }: { state: RealityCheckState
       )}
       <RCField lang={lang} label={ct.workHours} value={state.workHoursPerWeek} onChange={(v) => setState({ ...state, workHoursPerWeek: v })} min="1" />
       <RCField lang={lang} label={ct.baselineExpenses} value={state.monthlyBaselineExpenses} onChange={(v) => setState({ ...state, monthlyBaselineExpenses: v })} prefix={symbol} min="0" />
-      <label className="block"><span className="mb-1.5 block text-xs font-semibold text-slate-200" style={{ textAlign: align }}>{ct.currency}</span><select value={state.currency} onChange={(e) => setState({ ...state, currency: e.target.value })} className="h-11 w-full rounded-xl border border-white/10 bg-[#0b1a28] px-3 text-sm font-semibold text-white outline-none focus:border-[#b4ff3a]" style={{ direction: isAr ? 'rtl' : 'ltr' }}>{currencies.map((c) => <option key={c.code} value={c.code}>{c.code} · {c.symbol}</option>)}</select></label>
+      <label className="block"><span className="mb-1.5 block text-xs font-semibold text-slate-800" style={{ textAlign: align }}>{ct.currency}</span><select value={state.currency} onChange={(e) => setState({ ...state, currency: e.target.value })} className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-950 outline-none focus:border-[#b4ff3a]" style={{ direction: isAr ? 'rtl' : 'ltr' }}>{currencies.map((c) => <option key={c.code} value={c.code}>{c.code} · {c.symbol}</option>)}</select></label>
     </section>
   );
 }
@@ -170,20 +170,20 @@ function HabitRow({ habit, onChange, onRemove, currencySymbol, lang }: { habit: 
   const ct = t[lang]; const isAr = lang === 'ar';
   const Icon = iconMap[habit.icon] ?? Sparkles;
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[.035] p-3.5">
+    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3.5">
       <div className="mb-3 flex items-center gap-2.5" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#b4ff3a]/10 text-[#b4ff3a]"><Icon size={18} /></span>
-        <input value={habit.label} onChange={(e) => onChange({ ...habit, label: e.target.value })} className="flex-1 rounded-lg border border-white/10 bg-[#0b1a28] px-3 py-1.5 text-sm font-bold text-white outline-none focus:border-[#b4ff3a]" style={{ textAlign: isAr ? 'right' : 'left' }} />
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#b4ff3a]/15 text-[#5a9a32]"><Icon size={18} /></span>
+        <input value={habit.label} onChange={(e) => onChange({ ...habit, label: e.target.value })} className="flex-1 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-bold text-slate-950 outline-none focus:border-[#b4ff3a]" style={{ textAlign: isAr ? 'right' : 'left' }} />
         <button type="button" onClick={onRemove} className="text-slate-500 hover:text-red-400" aria-label={ct.removeHabit}><Trash2 size={16} /></button>
       </div>
       <div className="grid gap-2.5 sm:grid-cols-2">
         <div>
-          <span className="mb-1 block text-[11px] font-semibold text-slate-300" style={{ textAlign: isAr ? 'right' : 'left' }}>{ct.costLabel.replace('{sym}', currencySymbol)}</span>
+          <span className="mb-1 block text-[11px] font-semibold text-slate-700" style={{ textAlign: isAr ? 'right' : 'left' }}>{ct.costLabel.replace('{sym}', currencySymbol)}</span>
           <RCField lang={lang} label={ct.costLabel.replace('{sym}', currencySymbol)} value={habit.cost} onChange={(v) => onChange({ ...habit, cost: v })} prefix={currencySymbol} />
           <div className="mt-1.5"><FrequencyPicker lang={lang} value={habit.costFrequency} onChange={(v) => onChange({ ...habit, costFrequency: v })} /></div>
         </div>
         <div>
-          <span className="mb-1 block text-[11px] font-semibold text-slate-300" style={{ textAlign: isAr ? 'right' : 'left' }}>{ct.timeLostLabel}</span>
+          <span className="mb-1 block text-[11px] font-semibold text-slate-700" style={{ textAlign: isAr ? 'right' : 'left' }}>{ct.timeLostLabel}</span>
           <RCField lang={lang} label={ct.timeLostLabel} value={habit.timeLost} onChange={(v) => onChange({ ...habit, timeLost: v })} />
           <div className="mt-1.5"><FrequencyPicker lang={lang} value={habit.timeFrequency} onChange={(v) => onChange({ ...habit, timeFrequency: v })} /></div>
         </div>
@@ -201,15 +201,15 @@ function RealityCheckStep2({ state, setState, lang }: { state: RealityCheckState
   const removeHabit = (i: number) => setState({ ...state, habits: state.habits.filter((_, idx) => idx !== i) });
   return (
     <section className="reveal space-y-4">
-      <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[.15em] text-[#b4ff3a]" style={{ textAlign: align }}>{ct.step2Label}</p>
+      <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[.15em] text-[#5a9a32]" style={{ textAlign: align }}>{ct.step2Label}</p>
       <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl" style={{ textAlign: align }}>{ct.step2Title}</h1>
-      <p className="text-sm text-slate-400" style={{ textAlign: align }}>{ct.step2Sub}</p>
+      <p className="text-sm text-slate-600" style={{ textAlign: align }}>{ct.step2Sub}</p>
       {state.habits.length > 0 && (<div className="space-y-3">{state.habits.map((h, i) => <HabitRow key={h.id} habit={h} lang={lang} onChange={(nh) => updateHabit(i, nh)} onRemove={() => removeHabit(i)} currencySymbol={symbol} />)}</div>)}
-      {state.habits.length === 0 && (<div className="rounded-2xl border border-dashed border-white/15 bg-white/[.02] p-8 text-center"><Sparkles className="mx-auto mb-3 text-slate-500" size={32} /><p className="text-sm text-slate-400">{ct.noHabits}</p></div>)}
+      {state.habits.length === 0 && (<div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center"><Sparkles className="mx-auto mb-3 text-slate-500" size={32} /><p className="text-sm text-slate-600">{ct.noHabits}</p></div>)}
       <div className="flex flex-wrap gap-2" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
-        {templates.map((tpl) => { const Icon = iconMap[tpl.icon] ?? Sparkles; return (<button key={tpl.id} type="button" onClick={() => addHabit(tpl.id)} className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[.04] px-3.5 py-2.5 text-xs font-bold text-slate-300 transition hover:-translate-y-0.5 hover:border-white/30"><Icon size={16} /><Plus size={12} />{tpl.label}</button>); })}
+        {templates.map((tpl) => { const Icon = iconMap[tpl.icon] ?? Sparkles; return (<button key={tpl.id} type="button" onClick={() => addHabit(tpl.id)} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-xs font-bold text-slate-700 transition hover:-translate-y-0.5 hover:border-slate-400"><Icon size={16} /><Plus size={12} />{tpl.label}</button>); })}
       </div>
-      {state.habits.length > 0 && <div className="rounded-xl border border-[#b4ff3a]/20 bg-[#b4ff3a]/[.06] p-3 text-center text-sm font-bold text-[#b4ff3a]">{state.habits.length !== 1 ? ct.habitsReady.replace('{n}', String(state.habits.length)) : ct.habitSingular}</div>}
+      {state.habits.length > 0 && <div className="rounded-xl border border-[#b4ff3a]/20 bg-[#b4ff3a]/[.06] p-3 text-center text-sm font-bold text-[#5a9a32]">{state.habits.length !== 1 ? ct.habitsReady.replace('{n}', String(state.habits.length)) : ct.habitSingular}</div>}
     </section>
   );
 }
@@ -232,43 +232,43 @@ function RealityCheckCard({ cardRef, result, state, lang }: { cardRef: React.Ref
     : (langComp && langComp.achievableCount > 0 ? `You could have learned ${langComp.achievableCount} new language${langComp.achievableCount !== 1 ? 's' : ''} fluently instead` : 'You could have invested this time in yourself');
 
   return (
-    <div ref={cardRef} style={{ width: '380px', height: '676px', background: 'linear-gradient(160deg, #071522 0%, #0b1a28 45%, #1a1530 100%)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 20px 50px rgba(0,0,0,0.5)', padding: '28px 24px', display: 'flex', flexDirection: 'column', fontFamily: cardFont, direction: dir, position: 'relative', overflow: 'hidden' }}>
+    <div ref={cardRef} style={{ width: '380px', height: '676px', background: 'linear-gradient(160deg, #f8f6f1 0%, #ffffff 45%, #f0ede5 100%)', borderRadius: '24px', border: '1px solid rgba(15,23,42,0.08)', boxShadow: '0 20px 50px rgba(0,0,0,0.12)', padding: '28px 24px', display: 'flex', flexDirection: 'column', fontFamily: cardFont, direction: dir, position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: '-80px', right: isAr ? 'auto' : '-80px', left: isAr ? '-80px' : 'auto', width: '240px', height: '240px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(251,146,60,0.08) 0%, transparent 70%)' }} />
       <div style={{ position: 'absolute', bottom: '-60px', left: isAr ? 'auto' : '-60px', right: isAr ? '-60px' : 'auto', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(180,255,58,0.05) 0%, transparent 70%)' }} />
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', position: 'relative', flexDirection: isAr ? 'row-reverse' : 'row' }}>
         <div style={{ width: '28px', height: '28px', borderRadius: '7px', background: '#b4ff3a', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><span style={{ fontSize: '15px', fontWeight: 800, color: '#061019' }}>⚡</span></div>
-        <div><div style={{ fontSize: '13px', fontWeight: 800, color: '#f6f7f2', lineHeight: 1, textAlign: ta }}>{ct.cardHeader}</div><div style={{ fontSize: '8px', color: '#9aaab5', marginTop: '2px', textAlign: ta }}>{ct.cardSub}</div></div>
+        <div><div style={{ fontSize: '13px', fontWeight: 800, color: '#0f172a', lineHeight: 1, textAlign: ta }}>{ct.cardHeader}</div><div style={{ fontSize: '8px', color: '#64748b', marginTop: '2px', textAlign: ta }}>{ct.cardSub}</div></div>
       </div>
       <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: isAr ? '0' : '0.18em', textTransform: isAr ? 'none' : 'uppercase', color: '#fb923c', marginBottom: '5px', position: 'relative', textAlign: ta }}>{ct.cardBadge}</div>
-      <div style={{ fontSize: '15px', fontWeight: 800, color: '#f6f7f2', marginBottom: '12px', lineHeight: 1.2, position: 'relative', textAlign: ta }}>{topLabel ? ct.cardTopHabit.replace('{label}', topLabel) : ct.cardYourHabits}</div>
+      <div style={{ fontSize: '15px', fontWeight: 800, color: '#0f172a', marginBottom: '12px', lineHeight: 1.2, position: 'relative', textAlign: ta }}>{topLabel ? ct.cardTopHabit.replace('{label}', topLabel) : ct.cardYourHabits}</div>
       <div style={{ fontSize: '34px', fontWeight: 800, color: '#fb923c', lineHeight: 1.05, marginBottom: '3px', position: 'relative', textAlign: ta }}>{moneyFmt(result.totals.lifetimeCost)}</div>
-      <div style={{ fontSize: '11px', fontWeight: 600, color: '#9aaab5', marginBottom: '14px', position: 'relative', textAlign: ta }}>{ct.cardSpent}</div>
+      <div style={{ fontSize: '11px', fontWeight: 600, color: '#64748b', marginBottom: '14px', position: 'relative', textAlign: ta }}>{ct.cardSpent}</div>
       <div style={{ display: 'flex', gap: '10px', marginBottom: '14px', position: 'relative', flexDirection: isAr ? 'row-reverse' : 'row' }}>
         <div style={{ flex: 1, padding: '10px 12px', borderRadius: '12px', background: 'rgba(180,255,58,0.06)', border: '1px solid rgba(180,255,58,0.15)', textAlign: 'center' }}>
           <div style={{ fontSize: '22px', fontWeight: 800, color: '#b4ff3a', lineHeight: 1 }}>{fmtNum(result.totals.daysLost, lang, 1)}</div>
-          <div style={{ fontSize: '8px', fontWeight: 600, color: '#9aaab5', marginTop: '3px' }}>{ct.cardDays}</div>
+          <div style={{ fontSize: '8px', fontWeight: 600, color: '#64748b', marginTop: '3px' }}>{ct.cardDays}</div>
         </div>
         <div style={{ flex: 1, padding: '10px 12px', borderRadius: '12px', background: 'rgba(34,211,238,0.06)', border: '1px solid rgba(34,211,238,0.15)', textAlign: 'center' }}>
           <div style={{ fontSize: '22px', fontWeight: 800, color: '#22d3ee', lineHeight: 1 }}>{result.freedomAnalysis.freedomDelayYears ? `+${fmtNum(result.freedomAnalysis.freedomDelayYears, lang, 1)}` : '—'}</div>
-          <div style={{ fontSize: '8px', fontWeight: 600, color: '#9aaab5', marginTop: '3px' }}>{ct.cardFreedom}</div>
+          <div style={{ fontSize: '8px', fontWeight: 600, color: '#64748b', marginTop: '3px' }}>{ct.cardFreedom}</div>
         </div>
       </div>
       <div style={{ marginBottom: '12px', position: 'relative' }}>
-        <div style={{ fontSize: '8px', fontWeight: 700, textTransform: isAr ? 'none' : 'uppercase', letterSpacing: isAr ? '0' : '0.1em', color: '#9aaab5', marginBottom: '7px', textAlign: ta }}>{ct.cardBreakdown}</div>
-        <div style={{ display: 'flex', height: '8px', borderRadius: '4px', overflow: 'hidden', background: 'rgba(255,255,255,0.05)', marginBottom: '7px' }}>
+        <div style={{ fontSize: '8px', fontWeight: 700, textTransform: isAr ? 'none' : 'uppercase', letterSpacing: isAr ? '0' : '0.1em', color: '#64748b', marginBottom: '7px', textAlign: ta }}>{ct.cardBreakdown}</div>
+        <div style={{ display: 'flex', height: '8px', borderRadius: '4px', overflow: 'hidden', background: 'rgba(15,23,42,0.06)', marginBottom: '7px' }}>
           {result.habits.slice(0, 5).map((h, i) => { const colors = ['#b4ff3a', '#22d3ee', '#fb923c', '#f472b6', '#a78bfa']; return <div key={i} style={{ height: '100%', width: `${h.percentage}%`, background: colors[i % colors.length] }} />; })}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-          {result.habits.slice(0, 4).map((h, i) => { const colors = ['#b4ff3a', '#22d3ee', '#fb923c', '#a78bfa']; return <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '9px', flexDirection: isAr ? 'row-reverse' : 'row' }}><span style={{ width: '7px', height: '7px', borderRadius: '2px', background: colors[i % colors.length], flexShrink: 0 }} /><span style={{ color: '#cbd5e1', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: ta }}>{h.name}</span><span style={{ color: '#f6f7f2', fontWeight: 700 }}>{Math.round(h.percentage)}%</span></div>; })}
+          {result.habits.slice(0, 4).map((h, i) => { const colors = ['#b4ff3a', '#22d3ee', '#fb923c', '#a78bfa']; return <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '9px', flexDirection: isAr ? 'row-reverse' : 'row' }}><span style={{ width: '7px', height: '7px', borderRadius: '2px', background: colors[i % colors.length], flexShrink: 0 }} /><span style={{ color: '#475569', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: ta }}>{h.name}</span><span style={{ color: '#0f172a', fontWeight: 700 }}>{Math.round(h.percentage)}%</span></div>; })}
         </div>
       </div>
       <div style={{ marginTop: 'auto', marginBottom: '12px', padding: '10px 12px', borderRadius: '12px', background: 'rgba(251,146,60,0.06)', border: '1px solid rgba(251,146,60,0.15)', position: 'relative' }}>
         <div style={{ fontSize: '8px', fontWeight: 700, textTransform: isAr ? 'none' : 'uppercase', letterSpacing: isAr ? '0' : '0.12em', color: '#fb923c', marginBottom: '4px', textAlign: ta }}>{ct.cardQuote}</div>
-        <div style={{ fontSize: isAr ? '12px' : '11px', fontWeight: 500, lineHeight: 1.5, color: '#e2e8f0', textAlign: ta }}>{shockLine}</div>
+        <div style={{ fontSize: isAr ? '12px' : '11px', fontWeight: 500, lineHeight: 1.5, color: '#334155', textAlign: ta }}>{shockLine}</div>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '10px', position: 'relative', flexDirection: isAr ? 'row-reverse' : 'row' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(15,23,42,0.08)', paddingTop: '10px', position: 'relative', flexDirection: isAr ? 'row-reverse' : 'row' }}>
         <span style={{ fontSize: '8px', color: '#64748b' }}>{ct.cardQuote}</span>
-        <span style={{ fontSize: '10px', fontWeight: 600, color: '#9aaab5' }}>https://hiddencostsimulator.com</span>
+        <span style={{ fontSize: '10px', fontWeight: 600, color: '#64748b' }}>https://hiddencostsimulator.com</span>
       </div>
     </div>
   );
@@ -291,13 +291,13 @@ function RCShareModal({ lang, shareText, shareUrl, onClose }: { lang: Lang; shar
   const copyLink = async () => { try { await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`); } catch {} setCopied(true); setTimeout(() => setCopied(false), 2400); };
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
-      <div className="relative w-full max-w-sm rounded-2xl border border-white/10 bg-[#0b1a28] p-5 shadow-2xl" onClick={(e) => e.stopPropagation()} style={{ direction: isAr ? 'rtl' : 'ltr' }}>
-        <button onClick={onClose} className={isAr ? 'absolute left-4 top-4 text-slate-400 transition hover:text-white' : 'absolute right-4 top-4 text-slate-400 transition hover:text-white'} aria-label={ct.close}><X size={20} /></button>
+      <div className="absolute inset-0 bg-slate-900/30 backdrop-blur-md" />
+      <div className="relative w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl" onClick={(e) => e.stopPropagation()} style={{ direction: isAr ? 'rtl' : 'ltr' }}>
+        <button onClick={onClose} className={isAr ? 'absolute left-4 top-4 text-slate-600 transition hover:text-slate-950' : 'absolute right-4 top-4 text-slate-600 transition hover:text-slate-950'} aria-label={ct.close}><X size={20} /></button>
         <h2 className="font-display text-lg font-extrabold" style={{ textAlign: isAr ? 'right' : 'left' }}>{ct.shareTitle}</h2>
-        <p className="mt-1 text-xs text-slate-400" style={{ textAlign: isAr ? 'right' : 'left' }}>{ct.shareSub}</p>
-        <div className="mt-4 grid grid-cols-2 gap-2.5">{platforms.map((p) => <a key={p.name} href={p.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center rounded-xl border border-white/10 bg-white/[.04] px-3.5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-white/25">{p.name}</a>)}</div>
-        <button onClick={copyLink} className={`mt-2.5 flex w-full items-center justify-center gap-2.5 rounded-xl border px-3.5 py-3 text-sm font-bold transition hover:-translate-y-0.5 ${copied ? 'border-[#b4ff3a] bg-[#b4ff3a]/10 text-[#b4ff3a]' : 'border-white/10 bg-white/[.04] text-white hover:border-white/25'}`}>{copied ? <><Check size={18} />{ct.copied}</> : <><Copy size={16} />{ct.copyLink}</>}</button>
+        <p className="mt-1 text-xs text-slate-600" style={{ textAlign: isAr ? 'right' : 'left' }}>{ct.shareSub}</p>
+        <div className="mt-4 grid grid-cols-2 gap-2.5">{platforms.map((p) => <a key={p.name} href={p.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-3 text-sm font-bold text-slate-950 transition hover:-translate-y-0.5 hover:border-slate-300">{p.name}</a>)}</div>
+        <button onClick={copyLink} className={`mt-2.5 flex w-full items-center justify-center gap-2.5 rounded-xl border px-3.5 py-3 text-sm font-bold transition hover:-translate-y-0.5 ${copied ? 'border-[#b4ff3a] bg-[#b4ff3a]/15 text-[#5a9a32]' : 'border-slate-200 bg-slate-50 text-slate-950 hover:border-slate-300'}`}>{copied ? <><Check size={18} />{ct.copied}</> : <><Copy size={16} />{ct.copyLink}</>}</button>
       </div>
     </div>
   );
@@ -312,8 +312,8 @@ function ValidationErrorScreen({ lang, onReset, onBackToInput }: { lang: Lang; o
   return (
     <div className="app-shell grid-texture flex flex-col items-center justify-center px-5" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
       <div className="max-w-md text-center">
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-orange-400/30 bg-orange-400/10"><Hourglass className="text-orange-400" size={32} /></div>
-        <p className="text-base font-bold text-orange-200">{ct.valError}</p>
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-orange-200 bg-orange-50"><Hourglass className="text-orange-400" size={32} /></div>
+        <p className="text-base font-bold text-orange-700">{ct.valError}</p>
         <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:justify-center">
           <RCButton onClick={onBackToInput}>{ct.returnToInput}</RCButton>
           <RCButton onClick={onReset} secondary>{ct.reset}</RCButton>
@@ -366,20 +366,20 @@ function RealityCheckResult({ state, result, lang, onLanguage, onRestart, onHome
         {/* Stat panels from engine */}
         <div className="mt-6 grid grid-cols-2 gap-3">
           <div className="rounded-2xl border border-[#b4ff3a]/20 bg-[#b4ff3a]/[.05] p-4 text-center">
-            <div className="text-2xl font-extrabold text-[#b4ff3a]">{money(result.totals.lifetimeCost)}</div>
-            <div className="mt-1 text-[11px] font-semibold text-slate-400">{ct.totalMonetaryCost}</div>
+            <div className="text-2xl font-extrabold text-[#5a9a32]">{money(result.totals.lifetimeCost)}</div>
+            <div className="mt-1 text-[11px] font-semibold text-slate-600">{ct.totalMonetaryCost}</div>
           </div>
           <div className="rounded-2xl border border-orange-400/20 bg-orange-400/[.05] p-4 text-center">
-            <div className="text-2xl font-extrabold text-orange-400">{num(result.totals.lifetimeHours, 0)}</div>
-            <div className="mt-1 text-[11px] font-semibold text-slate-400">{ct.lostHours}</div>
+            <div className="text-2xl font-extrabold text-orange-600">{num(result.totals.lifetimeHours, 0)}</div>
+            <div className="mt-1 text-[11px] font-semibold text-slate-600">{ct.lostHours}</div>
           </div>
           <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/[.05] p-4 text-center">
-            <div className="text-2xl font-extrabold text-cyan-400">{num(result.totals.daysLost, 1)}</div>
-            <div className="mt-1 text-[11px] font-semibold text-slate-400">{ct.lostDays}</div>
+            <div className="text-2xl font-extrabold text-cyan-600">{num(result.totals.daysLost, 1)}</div>
+            <div className="mt-1 text-[11px] font-semibold text-slate-600">{ct.lostDays}</div>
           </div>
           <div className="rounded-2xl border border-pink-400/20 bg-pink-400/[.05] p-4 text-center">
-            <div className="text-2xl font-extrabold text-pink-400">{num(result.totals.yearsLost, 2)}</div>
-            <div className="mt-1 text-[11px] font-semibold text-slate-400">{ct.lostYears}</div>
+            <div className="text-2xl font-extrabold text-pink-600">{num(result.totals.yearsLost, 2)}</div>
+            <div className="mt-1 text-[11px] font-semibold text-slate-600">{ct.lostYears}</div>
           </div>
         </div>
 
@@ -387,23 +387,23 @@ function RealityCheckResult({ state, result, lang, onLanguage, onRestart, onHome
         {result.freedomAnalysis.freedomDelayStatus === 'CALCULATED' && result.freedomAnalysis.freedomDelayYears && (
           <div className="mt-4 rounded-2xl border border-[#22d3ee]/20 bg-[#22d3ee]/[.05] p-4 text-center">
             <div className="text-xl font-extrabold text-[#22d3ee]">+{num(result.freedomAnalysis.freedomDelayYears, 1)}</div>
-            <div className="mt-1 text-xs font-semibold text-slate-400">{ct.freedomAnalysis}</div>
+            <div className="mt-1 text-xs font-semibold text-slate-600">{ct.freedomAnalysis}</div>
           </div>
         )}
 
         {/* Habit breakdown from engine */}
         {result.habits.length > 1 && (
           <div className="mt-5">
-            <h3 className="mb-3 text-sm font-bold text-white" style={{ textAlign: isAr ? 'right' : 'left' }}>{ct.habitBreakdown}</h3>
+            <h3 className="mb-3 text-sm font-bold text-slate-950" style={{ textAlign: isAr ? 'right' : 'left' }}>{ct.habitBreakdown}</h3>
             <div className="space-y-2">
               {result.habits.map((h, i) => {
                 const colors = ['#b4ff3a', '#22d3ee', '#fb923c', '#f472b6', '#a78bfa'];
                 return (
                   <div key={i} className="flex items-center gap-3" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
                     <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: colors[i % colors.length] }} />
-                    <span className="flex-1 text-sm font-semibold text-slate-200" style={{ textAlign: isAr ? 'right' : 'left' }}>{h.name}</span>
-                    <span className="text-sm font-bold text-white">{money(h.lifetimeCost)}</span>
-                    <span className="w-12 text-right text-xs font-semibold text-slate-400">{Math.round(h.percentage)}%</span>
+                    <span className="flex-1 text-sm font-semibold text-slate-800" style={{ textAlign: isAr ? 'right' : 'left' }}>{h.name}</span>
+                    <span className="text-sm font-bold text-slate-950">{money(h.lifetimeCost)}</span>
+                    <span className="w-12 text-right text-xs font-semibold text-slate-600">{Math.round(h.percentage)}%</span>
                   </div>
                 );
               })}
@@ -414,13 +414,13 @@ function RealityCheckResult({ state, result, lang, onLanguage, onRestart, onHome
         {/* Comparisons from engine */}
         {activeComps.length > 0 && (
           <div className="mt-5">
-            <h3 className="mb-3 text-sm font-bold text-white" style={{ textAlign: isAr ? 'right' : 'left' }}>{ct.comparisons}</h3>
+            <h3 className="mb-3 text-sm font-bold text-slate-950" style={{ textAlign: isAr ? 'right' : 'left' }}>{ct.comparisons}</h3>
             <div className="grid grid-cols-2 gap-2.5">
               {activeComps.map((c) => (
-                <div key={c.id} className="rounded-xl border border-white/10 bg-white/[.04] p-3 text-center">
+                <div key={c.id} className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-center">
                   <div className="text-2xl">{compIcons[c.icon] ?? '📊'}</div>
-                  <div className="mt-1 text-lg font-extrabold text-[#b4ff3a]">{c.achievableCount}</div>
-                  <div className="text-[11px] font-semibold text-slate-400" style={{ textAlign: isAr ? 'right' : 'left' }}>{isAr ? c.labelAr : c.labelEn}</div>
+                  <div className="mt-1 text-lg font-extrabold text-[#5a9a32]">{c.achievableCount}</div>
+                  <div className="text-[11px] font-semibold text-slate-600" style={{ textAlign: isAr ? 'right' : 'left' }}>{isAr ? c.labelAr : c.labelEn}</div>
                 </div>
               ))}
             </div>
@@ -436,12 +436,12 @@ function RealityCheckResult({ state, result, lang, onLanguage, onRestart, onHome
         {/* Premium upgrade section (spec 10 & 14) */}
         <UpgradePanel lang={lang} onUnlocked={onHome} />
         <div className="flex flex-col items-center gap-2">
-          <button onClick={onRestart} className="mt-4 flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white"><RotateCcw size={14} />{ct.startOver}</button>
-          <button onClick={onHome} className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-white"><ArrowLeft size={14} style={{ transform: isAr ? 'scaleX(-1)' : 'none' }} />{ct.backHome}</button>
+          <button onClick={onRestart} className="mt-4 flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-950"><RotateCcw size={14} />{ct.startOver}</button>
+          <button onClick={onHome} className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-slate-950"><ArrowLeft size={14} style={{ transform: isAr ? 'scaleX(-1)' : 'none' }} />{ct.backHome}</button>
         </div>
-        <p className="mt-4 text-center text-[11px] text-slate-600">{ct.notAdvice}</p>
+        <p className="mt-4 text-center text-[11px] text-slate-700">{ct.notAdvice}</p>
       </div>
-      {toast && <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 animate-fade-in rounded-2xl border border-[#b4ff3a]/30 bg-[#0b1a28] px-5 py-3 shadow-2xl"><div className="flex items-center gap-2 text-sm font-bold text-[#b4ff3a]"><Check size={18} />{toast}</div></div>}
+      {toast && <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 animate-fade-in rounded-2xl border border-[#b4ff3a]/30 bg-white px-5 py-3 shadow-2xl"><div className="flex items-center gap-2 text-sm font-bold text-[#5a9a32]"><Check size={18} />{toast}</div></div>}
       {showShare && <RCShareModal lang={lang} shareText={shareText} shareUrl={shareUrl} onClose={() => setShowShare(false)} />}
     </div>
   );
@@ -494,14 +494,14 @@ export function RealityCheck({ language, onHome, onLanguage }: { language: Lang;
       <RCHeader lang={lang} onLanguage={onLanguage} onHome={onHome} />
       <div className="flex flex-1 flex-col overflow-hidden px-5 pb-3 pt-3 lg:pt-4">
         <div className="mb-3 flex shrink-0 items-center justify-between" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
-          <button onClick={back} className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white" style={{ flexDirection: isAr ? 'row-reverse' : 'row' }}><ArrowLeft size={15} style={{ transform: isAr ? 'scaleX(-1)' : 'none' }} />{ct.back}</button>
-          <span className="text-xs font-bold text-[#fb923c]">{ct.stepOf.replace('{n}', String(step))}</span>
+          <button onClick={back} className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-950" style={{ flexDirection: isAr ? 'row-reverse' : 'row' }}><ArrowLeft size={15} style={{ transform: isAr ? 'scaleX(-1)' : 'none' }} />{ct.back}</button>
+          <span className="text-xs font-bold text-orange-600">{ct.stepOf.replace('{n}', String(step))}</span>
         </div>
-        <div className="mb-4 h-1.5 shrink-0 rounded-full bg-white/10"><div className="h-full rounded-full bg-[#fb923c] transition-all" style={{ width: `${step * 50}%` }} /></div>
+        <div className="mb-4 h-1.5 shrink-0 rounded-full bg-slate-200"><div className="h-full rounded-full bg-orange-500 transition-all" style={{ width: `${step * 50}%` }} /></div>
         <div className="flex-1 overflow-y-auto pb-4">
           {step === 1 && <RealityCheckStep1 state={state} setState={setState} lang={lang} />}
           {step === 2 && <RealityCheckStep2 state={state} setState={setState} lang={lang} />}
-          {error && <p role="alert" className="mt-3 rounded-xl border border-orange-400/30 bg-orange-400/10 p-2.5 text-xs text-orange-200" style={{ textAlign: isAr ? 'right' : 'left' }}>{error}</p>}
+          {error && <p role="alert" className="mt-3 rounded-xl border border-orange-200 bg-orange-50 p-2.5 text-xs text-orange-700" style={{ textAlign: isAr ? 'right' : 'left' }}>{error}</p>}
         </div>
         <div className="shrink-0 pt-3"><RCButton onClick={next} className="w-full sm:w-auto sm:ml-auto">{step === 2 ? ct.reveal : ct.continue}<ArrowRight size={18} style={{ transform: isAr ? 'scaleX(-1)' : 'none' }} /></RCButton></div>
       </div>

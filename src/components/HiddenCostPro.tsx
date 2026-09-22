@@ -18,8 +18,9 @@ import {
 } from '@/lib/proI18n';
 import { ProResultsV3 } from '@/components/ProResultsV3';
 import { usePayment, FREE_HABIT_LIMIT } from '@/context/PaymentContext';
+import { useAuth } from '@/context/AuthContext';
 import { UpgradePanel } from '@/components/UpgradePanel';
-import { createCheckoutSession, beginCheckoutAndRedirect } from '@/services/paymentService';
+import { createCheckoutSession, beginCheckoutAndRedirect, getCheckoutUrlForEmail } from '@/services/paymentService';
 
 // ============================================================================
 // SHARED TYPES
@@ -62,6 +63,7 @@ function nextHabitId(): string { habitIdCounter++; return `habit-${habitIdCounte
 
 export function HiddenCostPro({ language, onHome, onLanguage }: { language: ProLang; onHome: () => void; onLanguage: () => void }) {
   const { canAccess, featureAccess } = usePayment();
+  const { user, userEmail, signInWithGoogle } = useAuth();
   const [step, setStep] = useState(1);
   const [error, setError] = useState('');
   const [resultData, setResultData] = useState<ProResultData | null>(null);
@@ -154,6 +156,14 @@ export function HiddenCostPro({ language, onHome, onLanguage }: { language: ProL
   };
 
   // Download report as a PDF file directly to the user's device
+  const handleUnlock = async () => {
+    if (userEmail) {
+      beginCheckoutAndRedirect('pro', getCheckoutUrlForEmail(userEmail));
+    } else {
+      await signInWithGoogle();
+    }
+  };
+
   const handleDownload = async () => {
     // Re-check entitlement at the moment of the action, not only at render time.
     if (!canAccess('pdfReport')) return;
@@ -166,7 +176,7 @@ export function HiddenCostPro({ language, onHome, onLanguage }: { language: ProL
         margin: [10, 10, 10, 10],
         filename: 'Financial_Recovery_Roadmap.pdf',
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#0b1a28', logging: false },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#f8f6f1', logging: false },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['css', 'legacy'] },
       } as Parameters<typeof worker.set>[0]);
@@ -187,16 +197,16 @@ export function HiddenCostPro({ language, onHome, onLanguage }: { language: ProL
           <div className="flex flex-1 flex-col items-center justify-center px-5 py-8" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
             <div className="max-w-md text-center">
               <button
-                onClick={() => { beginCheckoutAndRedirect('pro', 'https://hidden-cost-simulator.lemonsqueezy.com/checkout/buy/d2dadac1-c82f-44be-afbc-ce168e182e6b'); }}
+                onClick={handleUnlock}
                 aria-label={isAr ? 'افتح برو — التحليل الكامل' : 'Unlock Pro — Full Analysis'}
-                className="group mx-auto mb-4 flex h-16 w-16 cursor-pointer items-center justify-center rounded-2xl border border-[#b4ff3a]/30 bg-[#b4ff3a]/10 transition hover:-translate-y-1 hover:border-[#b4ff3a]/60 hover:bg-[#b4ff3a]/20 hover:shadow-[0_0_30px_rgba(180,255,58,.2)] focus:outline-none focus:ring-2 focus:ring-[#b4ff3a] focus:ring-offset-2 focus:ring-offset-[#07121c]"
+                className="group mx-auto mb-4 flex h-16 w-16 cursor-pointer items-center justify-center rounded-2xl border border-[#b4ff3a]/30 bg-[#b4ff3a]/15 transition hover:-translate-y-1 hover:border-[#b4ff3a]/60 hover:bg-[#b4ff3a]/20 hover:shadow-[0_0_30px_rgba(180,255,58,.2)] focus:outline-none focus:ring-2 focus:ring-[#b4ff3a] focus:ring-offset-2 focus:ring-offset-[#f8f6f1]"
               >
-                <Lock size={32} className="text-[#b4ff3a] transition group-hover:scale-110" />
+                <Lock size={32} className="text-[#5a9a32] transition group-hover:scale-110" />
               </button>
-              <h1 className="font-display text-xl font-extrabold text-white">
+              <h1 className="font-display text-xl font-extrabold text-slate-950">
                 {isAr ? 'تحليلك جاهز — افتح برو لرؤيته' : 'Your analysis is ready — unlock Pro to see it'}
               </h1>
-              <p className="mt-2 text-sm text-slate-400">
+              <p className="mt-2 text-sm text-slate-600">
                 {isAr ? 'حساباتك مكتملة. افتح الميزات المدفوعة للاطلاع على التقرير الكامل وتحميل PDF.' : 'Your calculations are complete. Unlock premium features to view the full report and download the PDF.'}
               </p>
             </div>
@@ -221,36 +231,36 @@ export function HiddenCostPro({ language, onHome, onLanguage }: { language: ProL
       <main className="flex flex-1 flex-col overflow-hidden px-5 pb-3 pt-3 lg:px-8 lg:pt-4" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
         {/* Progress bar */}
         <div className="mb-3 flex shrink-0 items-center justify-between">
-          <button onClick={handleBack} className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white">
+          <button onClick={handleBack} className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-950">
             {isAr ? <ArrowRight size={15} /> : <ArrowLeft size={15} />} {t.back}
           </button>
-          <span className="text-xs font-bold text-[#b4ff3a]">{t.step} {step} {t.of} 2</span>
+          <span className="text-xs font-bold text-[#5a9a32]">{t.step} {step} {t.of} 2</span>
         </div>
-        <div className="mb-4 h-1.5 shrink-0 rounded-full bg-white/10">
+        <div className="mb-4 h-1.5 shrink-0 rounded-full bg-slate-200">
           <div className="h-full rounded-full bg-[#b4ff3a] transition-all" style={{ width: `${step * 50}%` }} />
         </div>
 
         <div className="flex-1 overflow-y-auto">
           {step === 1 && (
             <section className="reveal">
-              <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[.15em] text-[#b4ff3a]">{t.step1Label}</p>
-              <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">{t.step1Title}</h1>
-              <p className="mt-2 text-sm text-slate-400">{t.step1Sub}</p>
+              <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[.15em] text-[#5a9a32]">{t.step1Label}</p>
+              <h1 className="font-display text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">{t.step1Title}</h1>
+              <p className="mt-2 text-sm text-slate-600">{t.step1Sub}</p>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 <ProField label={t.monthlyIncome} value={monthlyIncome} onChange={setMonthlyIncome} prefix={currencies.find((c) => c.code === currency)?.symbol} type="number" lang={language} />
                 <ProField label={t.weeklyWorkHours} value={weeklyWorkHours} onChange={setWeeklyWorkHours} type="number" lang={language} />
                 <ProField label={t.ageOptional} value={age} onChange={setAge} type="number" lang={language} />
                 <ProField label={language === 'ar' ? 'معدل الادخار الحالي (٪) - اختياري' : 'Current savings rate (%) - optional'} value={savingsRate} onChange={setSavingsRate} type="number" lang={language} />
                 <label className="block">
-                  <span className="mb-1.5 block text-xs font-semibold text-slate-200">{t.currency}</span>
-                  <select value={currency} onChange={(e) => setCurrency(e.target.value)} className="h-11 w-full rounded-xl border border-white/10 bg-[#0b1a28] px-3 text-sm font-semibold text-white outline-none focus:border-[#b4ff3a]" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
+                  <span className="mb-1.5 block text-xs font-semibold text-slate-800">{t.currency}</span>
+                  <select value={currency} onChange={(e) => setCurrency(e.target.value)} className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-950 outline-none focus:border-[#b4ff3a]" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
                     {currencies.map((c) => <option key={c.code} value={c.code}>{c.code} · {c.symbol}</option>)}
                   </select>
                 </label>
               </div>
-              <div className="mt-4 rounded-xl border border-cyan-400/20 bg-cyan-400/[.05] p-3">
-                <p className="text-xs leading-5 text-slate-300">
-                  <Sparkles size={13} className="mb-0.5 mr-1 inline text-cyan-300" />
+              <div className="mt-4 rounded-xl border border-cyan-200 bg-cyan-50 p-3">
+                <p className="text-xs leading-5 text-slate-700">
+                  <Sparkles size={13} className="mb-0.5 mr-1 inline text-cyan-600" />
                   {t.step1Helper}
                 </p>
               </div>
@@ -259,15 +269,15 @@ export function HiddenCostPro({ language, onHome, onLanguage }: { language: ProL
 
           {step === 2 && (
             <section className="reveal">
-              <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[.15em] text-[#b4ff3a]">{t.step2Label}</p>
-              <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">{t.step2Title}</h1>
-              <p className="mt-2 text-sm text-slate-400">{t.step2Sub}</p>
+              <p className="mb-1.5 text-[11px] font-bold uppercase tracking-[.15em] text-[#5a9a32]">{t.step2Label}</p>
+              <h1 className="font-display text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">{t.step2Title}</h1>
+              <p className="mt-2 text-sm text-slate-600">{t.step2Sub}</p>
 
               <div className="mt-4 space-y-3">
                 {habits.map((habit, idx) => (
-                  <div key={habit.id} className="rounded-2xl border border-white/10 bg-white/[.03] p-3">
+                  <div key={habit.id} className="rounded-2xl border border-slate-200 bg-white p-3">
                     <div className="mb-2 flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-400">{t.habitNumber} {idx + 1}</span>
+                      <span className="text-xs font-bold text-slate-600">{t.habitNumber} {idx + 1}</span>
                       {habits.length > 1 && (
                         <button onClick={() => removeHabit(habit.id)} className="text-slate-500 transition hover:text-orange-400" aria-label={t.removeHabit}>
                           <Trash2 size={15} />
@@ -281,11 +291,11 @@ export function HiddenCostPro({ language, onHome, onLanguage }: { language: ProL
                         value={habit.name}
                         onChange={(e) => updateHabit(habit.id, { name: e.target.value })}
                         placeholder={t.habitNamePlaceholder}
-                        className="h-11 w-full rounded-xl border border-white/10 bg-[#0b1a28] px-3 text-sm font-semibold text-white outline-none focus:border-[#b4ff3a] sm:col-span-2"
+                        className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-950 outline-none focus:border-[#b4ff3a] sm:col-span-2"
                         style={{ direction: isAr ? 'rtl' : 'ltr', textAlign: isAr ? 'right' : 'left' }}
                       />
                       <label className="block">
-                        <span className="mb-1 block text-[10px] font-semibold text-slate-300">{t.category}</span>
+                        <span className="mb-1 block text-[10px] font-semibold text-slate-800">{t.category}</span>
                         <div className="flex flex-wrap gap-1">
                           {CATEGORIES.map((cat) => {
                             const CatIcon = CATEGORY_ICONS[cat];
@@ -293,7 +303,7 @@ export function HiddenCostPro({ language, onHome, onLanguage }: { language: ProL
                               <button
                                 key={cat}
                                 onClick={() => updateHabit(habit.id, { category: cat })}
-                                className={`flex items-center gap-1 rounded-lg border px-2 py-1.5 text-[11px] font-semibold transition ${habit.category === cat ? 'border-[#b4ff3a] bg-[#b4ff3a]/10 text-[#b4ff3a]' : 'border-white/10 text-slate-400 hover:border-white/30'}`}
+                                className={`flex items-center gap-1 rounded-lg border px-2 py-1.5 text-[11px] font-semibold transition ${habit.category === cat ? 'border-[#b4ff3a] bg-[#b4ff3a]/15 text-[#5a9a32]' : 'border-slate-200 text-slate-600 hover:border-slate-400'}`}
                               >
                                 <CatIcon size={12} /> {categoryLabel(language, cat)}
                               </button>
@@ -303,26 +313,26 @@ export function HiddenCostPro({ language, onHome, onLanguage }: { language: ProL
                       </label>
                       <ProField label={t.costAmount} value={habit.costAmount} onChange={(v) => updateHabit(habit.id, { costAmount: v })} type="number" small lang={language} />
                       <label className="block">
-                        <span className="mb-1 block text-[10px] font-semibold text-slate-300">{t.costFrequency}</span>
-                        <select value={habit.costFrequency} onChange={(e) => updateHabit(habit.id, { costFrequency: e.target.value as ProFrequency })} className="h-9 w-full rounded-lg border border-white/10 bg-[#0b1a28] px-2 text-xs font-semibold text-white outline-none focus:border-[#b4ff3a]" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
+                        <span className="mb-1 block text-[10px] font-semibold text-slate-800">{t.costFrequency}</span>
+                        <select value={habit.costFrequency} onChange={(e) => updateHabit(habit.id, { costFrequency: e.target.value as ProFrequency })} className="h-9 w-full rounded-lg border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-950 outline-none focus:border-[#b4ff3a]" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
                           {FREQUENCIES.map((f) => <option key={f} value={f}>{frequencyLabel(language, f)}</option>)}
                         </select>
                       </label>
                       <ProField label={t.timeHours} value={habit.timeAmount} onChange={(v) => updateHabit(habit.id, { timeAmount: v })} type="number" small lang={language} />
                       <label className="block">
-                        <span className="mb-1 block text-[10px] font-semibold text-slate-300">{t.timeFrequency}</span>
-                        <select value={habit.timeFrequency} onChange={(e) => updateHabit(habit.id, { timeFrequency: e.target.value as ProFrequency })} className="h-9 w-full rounded-lg border border-white/10 bg-[#0b1a28] px-2 text-xs font-semibold text-white outline-none focus:border-[#b4ff3a]" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
+                        <span className="mb-1 block text-[10px] font-semibold text-slate-800">{t.timeFrequency}</span>
+                        <select value={habit.timeFrequency} onChange={(e) => updateHabit(habit.id, { timeFrequency: e.target.value as ProFrequency })} className="h-9 w-full rounded-lg border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-950 outline-none focus:border-[#b4ff3a]" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
                           {FREQUENCIES.map((f) => <option key={f} value={f}>{frequencyLabel(language, f)}</option>)}
                         </select>
                       </label>
                       <label className="block sm:col-span-2">
-                        <span className="mb-1 block text-[10px] font-semibold text-slate-300">{t.importance}</span>
+                        <span className="mb-1 block text-[10px] font-semibold text-slate-800">{t.importance}</span>
                         <div className="flex gap-1">
                           {[1, 2, 3, 4, 5].map((n) => (
                             <button
                               key={n}
                               onClick={() => updateHabit(habit.id, { importance: n as 1 | 2 | 3 | 4 | 5 })}
-                              className={`flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold transition ${habit.importance === n ? 'bg-[#b4ff3a] text-[#07121b]' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
+                              className={`flex h-8 w-8 items-center justify-center rounded-lg text-xs font-bold transition ${habit.importance === n ? 'bg-[#b4ff3a] text-[#07121b]' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
                             >
                               {n}
                             </button>
@@ -335,18 +345,18 @@ export function HiddenCostPro({ language, onHome, onLanguage }: { language: ProL
               </div>
 
               {featureAccess.unlimitedHabits || habits.length < FREE_HABIT_LIMIT ? (
-                <button onClick={addHabit} className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-white/20 py-3 text-sm font-semibold text-slate-400 transition hover:border-[#b4ff3a]/50 hover:text-[#b4ff3a]">
+                <button onClick={addHabit} className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-slate-300 py-3 text-sm font-semibold text-slate-600 transition hover:border-[#b4ff3a]/50 hover:text-[#5a9a32]">
                   <Plus size={18} /> {t.addHabit}
                 </button>
               ) : (
-                <button onClick={() => createCheckoutSession('pro')} className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-[#b4ff3a]/40 py-3 text-sm font-semibold text-[#b4ff3a] transition hover:border-[#b4ff3a]/70 hover:bg-[#b4ff3a]/5">
+                <button onClick={() => createCheckoutSession('pro', userEmail ?? undefined)} className="mt-3 flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-[#b4ff3a]/40 py-3 text-sm font-semibold text-[#5a9a32] transition hover:border-[#b4ff3a]/70 hover:bg-[#b4ff3a]/5">
                   <Lock size={16} /> {language === 'ar' ? `حد العادات المجانية (${FREE_HABIT_LIMIT}) — افتح برو لعادات غير محدودة` : `Free habit limit (${FREE_HABIT_LIMIT}) — Unlock Pro for unlimited habits`}
                 </button>
               )}
             </section>
           )}
 
-          {error && <p role="alert" className="mt-3 rounded-xl border border-orange-400/30 bg-orange-400/10 p-2.5 text-xs text-orange-200">{error}</p>}
+          {error && <p role="alert" className="mt-3 rounded-xl border border-orange-200 bg-orange-50 p-2.5 text-xs text-orange-700">{error}</p>}
         </div>
 
         <div className="shrink-0 pt-3">
@@ -372,22 +382,22 @@ function ProHeader({ lang, onHome, onLanguage }: { lang: ProLang; onHome: () => 
   const isAr = lang === 'ar';
   const langBtn = isAr ? 'English' : 'العربية';
   return (
-    <header className="relative z-10 shrink-0 border-b border-white/[.07]">
+    <header className="relative z-10 shrink-0 border-b border-slate-200/70 bg-white/60 backdrop-blur-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-2 lg:px-10">
         <button onClick={onHome} aria-label="Hidden Cost home" className="flex items-center gap-2 text-left">
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#b4ff3a] text-[#061019] shadow-[0_0_20px_rgba(180,255,58,.25)]">
             <Zap size={20} strokeWidth={3} fill="currentColor" />
           </span>
           <span className="font-display leading-none">
-            <strong className="block text-[15px] font-extrabold tracking-tight">Hidden Cost <span className="text-[#b4ff3a]">Pro</span></strong>
-            <small className="block pt-0.5 text-[10px] font-medium text-slate-300">{t.headerTagline}</small>
+            <strong className="block text-[15px] font-extrabold tracking-tight text-slate-950">Hidden Cost <span className="text-[#5a9a32]">Pro</span></strong>
+            <small className="block pt-0.5 text-[10px] font-semibold text-slate-600">{t.headerTagline}</small>
           </span>
         </button>
         <div className="flex items-center gap-3">
-          <button onClick={onLanguage} className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[.03] px-4 py-2 text-sm font-semibold hover:border-[#b4ff3a]/50" aria-label="Switch language">
+          <button onClick={onLanguage} className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm hover:border-[#b4ff3a]/50" aria-label="Switch language">
             <Globe2 size={17} /><span>{langBtn}</span><ChevronDown size={14} />
           </button>
-          <span className="rounded-full border border-[#b4ff3a]/40 bg-[#b4ff3a]/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-[#b4ff3a]">{t.proBadge}</span>
+          <span className="rounded-full border border-[#b4ff3a]/40 bg-[#b4ff3a]/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-[#5a9a32]">{t.proBadge}</span>
         </div>
       </div>
     </header>
@@ -402,16 +412,16 @@ function ProField({
   const isAr = lang === 'ar';
   return (
     <label className="block">
-      <span className="mb-1 block text-[10px] font-semibold text-slate-300">{label}</span>
-      <div className={`flex ${small ? 'h-9' : 'h-11'} items-center rounded-${small ? 'lg' : 'xl'} border border-white/10 bg-[#0b1a28] px-3 transition focus-within:border-[#b4ff3a]`}>
-        {prefix && <span className="mr-1.5 text-sm text-slate-400">{prefix}</span>}
+      <span className="mb-1 block text-[10px] font-semibold text-slate-800">{label}</span>
+      <div className={`flex ${small ? 'h-9' : 'h-11'} items-center rounded-${small ? 'lg' : 'xl'} border border-slate-200 bg-white px-3 transition focus-within:border-[#b4ff3a]`}>
+        {prefix && <span className="mr-1.5 text-sm text-slate-600">{prefix}</span>}
         <input
           aria-label={label}
           type={type}
           min="0"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full bg-transparent text-sm font-semibold text-white outline-none placeholder:text-slate-600"
+          className="w-full bg-transparent text-sm font-semibold text-slate-950 outline-none placeholder:text-slate-300"
           placeholder="0"
           style={{ direction: isAr ? 'rtl' : 'ltr', textAlign: isAr ? 'right' : 'left' }}
         />

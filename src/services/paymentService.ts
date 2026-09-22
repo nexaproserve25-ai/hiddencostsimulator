@@ -53,10 +53,19 @@ function getProvider(): PaymentProvider {
   return 'simulation';
 }
 
-function getCheckoutUrl(): string | null {
+const LEMON_CHECKOUT_BASE = 'https://hidden-cost-simulator.lemonsqueezy.com/checkout/buy/449dd747-797b-4192-8f99-6dbd4cfa8dfd';
+
+function getCheckoutUrl(email?: string): string | null {
   const raw = import.meta.env.VITE_PAYMENT_CHECKOUT_URL as string | undefined;
-  if (raw && raw.trim().length > 0) return raw.trim();
-  return null;
+  const base = raw && raw.trim().length > 0 ? raw.trim() : LEMON_CHECKOUT_BASE;
+  if (!email) return base;
+  try {
+    const url = new URL(base);
+    url.searchParams.set('checkout[email]', email);
+    return url.toString();
+  } catch {
+    return `${base}?checkout[email]=${encodeURIComponent(email)}`;
+  }
 }
 
 /**
@@ -105,9 +114,9 @@ function isWellFormedSessionId(value: string): boolean {
  * Returns a PaymentSession if successful, or a PaymentError if configuration
  * is missing or the redirect fails.
  */
-export function createCheckoutSession(plan: Plan): { session: PaymentSession } | { error: PaymentError } {
+export function createCheckoutSession(plan: Plan, userEmail?: string): { session: PaymentSession } | { error: PaymentError } {
   const provider = getProvider();
-  const checkoutUrl = getCheckoutUrl();
+  const checkoutUrl = getCheckoutUrl(userEmail);
 
   // Validate configuration. A deployed build with no real provider configured
   // must fail closed rather than fall back to the development simulation.
@@ -221,11 +230,13 @@ export async function handlePaymentSuccess(
  * Any non-affirmative answer, network failure, or malformed response is
  * treated as "not paid".
  */
-async function verifyLicense(verifyUrl: string, sessionId: string): Promise<boolean> {
+async function verifyLicense(verifyUrl: string, sessionId: string, authToken?: string): Promise<boolean> {
   try {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (authToken) headers['Authorization'] = authToken;
     const response = await fetch(verifyUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({ sessionId, plan: 'pro' }),
     });
     if (!response.ok) return false;
@@ -242,6 +253,10 @@ async function verifyLicense(verifyUrl: string, sessionId: string): Promise<bool
  * the return with a verification request; without it a genuine buyer cannot be
  * confirmed. Navigation is a direct assignment so no router state is involved.
  */
+export function getCheckoutUrlForEmail(email?: string): string {
+  return getCheckoutUrl(email) ?? LEMON_CHECKOUT_BASE;
+}
+
 export function beginCheckoutAndRedirect(plan: Plan, checkoutUrl: string): void {
   try {
     const session: PaymentSession = {

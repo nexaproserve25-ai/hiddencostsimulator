@@ -15,13 +15,13 @@ function LegalShell({ lang, onHome, title, icon: Icon, children }: { lang: Lang;
   const dir = isAr ? 'rtl' : 'ltr';
   return (
     <div className="app-shell grid-texture" style={{ direction: dir }}>
-      <header className="relative z-10 shrink-0 border-b border-white/[.07]">
+      <header className="relative z-10 shrink-0 border-b border-slate-200/70 bg-white/60 backdrop-blur-sm">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-5 py-2 lg:px-8 lg:py-2.5">
           <button onClick={onHome} aria-label="Hidden Cost home" className="flex items-center gap-2 text-left">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#b4ff3a] text-[#061019] shadow-[0_0_20px_rgba(180,255,58,.25)]"><Zap size={20} strokeWidth={3} fill="currentColor" /></span>
-            <span className="font-display leading-none"><strong className="block text-[15px] font-extrabold tracking-tight">Hidden Cost</strong><small className="block pt-0.5 text-[10px] font-medium text-slate-300">Decision Simulator</small></span>
+            <span className="font-display leading-none"><strong className="block text-[15px] font-extrabold tracking-tight text-slate-950">Hidden Cost</strong><small className="block pt-0.5 text-[10px] font-semibold text-slate-600">Decision Simulator</small></span>
           </button>
-          <button onClick={onHome} className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[.03] px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-[#b4ff3a]/50 hover:text-white">
+          <button onClick={onHome} className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-[#b4ff3a]/50 hover:text-slate-950">
             <ArrowLeft size={16} style={{ transform: isAr ? 'scaleX(-1)' : 'none' }} />
             {isAr ? 'العودة للرئيسية' : 'Back to Home'}
           </button>
@@ -30,10 +30,10 @@ function LegalShell({ lang, onHome, title, icon: Icon, children }: { lang: Lang;
       <main className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-3xl px-5 py-8 lg:px-8 lg:py-12">
           <div className="mb-8 flex items-center gap-4">
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-[#b4ff3a]/30 bg-[#b4ff3a]/10 text-[#b4ff3a]"><Icon size={28} /></span>
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-[#b4ff3a]/30 bg-[#b4ff3a]/15 text-[#5a9a32]"><Icon size={28} /></span>
             <div>
-              <h1 className="font-display text-2xl font-extrabold tracking-tight text-white sm:text-3xl">{title}</h1>
-              <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-slate-400">
+              <h1 className="font-display text-2xl font-extrabold tracking-tight text-slate-950 sm:text-3xl">{title}</h1>
+              <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-slate-600">
                 <span className="inline-flex items-center gap-1.5"><Calendar size={13} className="text-slate-500" />{isAr ? 'آخر تحديث' : 'Last Updated'}: {LAST_UPDATED}</span>
                 <span className="inline-flex items-center gap-1.5"><Mail size={13} className="text-slate-500" />{CONTACT_EMAIL}</span>
               </div>
@@ -42,7 +42,7 @@ function LegalShell({ lang, onHome, title, icon: Icon, children }: { lang: Lang;
           {children}
         </div>
       </main>
-      <footer className="shrink-0 border-t border-white/[.07]">
+      <footer className="shrink-0 border-t border-slate-200/70">
         <div className="mx-auto max-w-7xl px-5 py-4 lg:px-10">
           <p className="text-center text-xs text-slate-500">© 2026 Hidden Cost Simulator. {isAr ? 'جميع الحقوق محفوظة.' : 'All rights reserved.'}</p>
         </div>
@@ -55,18 +55,18 @@ function Section({ num, title, children, isAr }: { num: number; title: string; c
   return (
     <section className="mt-8">
       <div className="flex items-center gap-3">
-        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#b4ff3a]/10 text-sm font-extrabold text-[#b4ff3a]">{num}</span>
-        <h2 className="font-display text-lg font-bold text-white" style={{ textAlign: isAr ? 'right' : 'left' }}>{title}</h2>
+        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#b4ff3a]/15 text-sm font-extrabold text-[#5a9a32]">{num}</span>
+        <h2 className="font-display text-lg font-bold text-slate-950" style={{ textAlign: isAr ? 'right' : 'left' }}>{title}</h2>
       </div>
-      <div className="mt-3 space-y-3 pl-10 text-sm leading-7 text-slate-300" style={{ paddingLeft: isAr ? 0 : 2.5 * 10, paddingRight: isAr ? 2.5 * 10 : 0 }}>{children}</div>
+      <div className="mt-3 space-y-3 pl-10 text-sm leading-7 text-slate-800" style={{ paddingLeft: isAr ? 0 : 2.5 * 10, paddingRight: isAr ? 2.5 * 10 : 0 }}>{children}</div>
     </section>
   );
 }
 
 function Callout({ icon: Icon, children, tone = 'info' }: { icon: typeof AlertTriangle; children: React.ReactNode; tone?: 'info' | 'warning' }) {
   const styles = tone === 'warning'
-    ? 'border-orange-400/30 bg-orange-400/[.07] text-orange-200'
-    : 'border-cyan-400/25 bg-cyan-400/[.06] text-cyan-200';
+    ? 'border-orange-200 bg-orange-50 text-orange-700'
+    : 'border-cyan-200 bg-cyan-50 text-cyan-600';
   return (
     <div className={`mt-4 flex items-start gap-3 rounded-xl border p-4 ${styles}`}>
       <Icon size={20} className="mt-0.5 shrink-0" />
@@ -120,7 +120,7 @@ export function PrivacyPolicy({ lang, onHome }: LegalPageProps) {
       <Section num={4} title={t.s4} isAr={isAr}><p>{t.s4p}</p></Section>
       <Section num={5} title={t.s5} isAr={isAr}><p>{t.s5p}</p></Section>
       <Section num={6} title={t.s6} isAr={isAr}>
-        <p>{t.s6p} <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-[#b4ff3a] underline decoration-[#b4ff3a]/40 underline-offset-2 hover:decoration-[#b4ff3a]">{CONTACT_EMAIL}</a>{t.s6p2}</p>
+        <p>{t.s6p} <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-[#5a9a32] underline decoration-[#5a9a32]/40 underline-offset-2 hover:decoration-[#5a9a32]">{CONTACT_EMAIL}</a>{t.s6p2}</p>
       </Section>
     </LegalShell>
   );
@@ -209,7 +209,7 @@ export function RefundPolicy({ lang, onHome }: LegalPageProps) {
         <Callout icon={ShieldCheck}><strong>14 {isAr ? 'يوماً' : 'days'}</strong> — {isAr ? 'استرداد كامل بدون أسئلة' : 'full refund, no questions asked'}</Callout>
       </Section>
       <Section num={2} title={t.s2} isAr={isAr}>
-        <p>{t.s2p} <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-[#b4ff3a] underline decoration-[#b4ff3a]/40 underline-offset-2 hover:decoration-[#b4ff3a]">{CONTACT_EMAIL}</a>{t.s2p2}</p>
+        <p>{t.s2p} <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-[#5a9a32] underline decoration-[#5a9a32]/40 underline-offset-2 hover:decoration-[#5a9a32]">{CONTACT_EMAIL}</a>{t.s2p2}</p>
       </Section>
       <Section num={3} title={t.s3} isAr={isAr}>
         <p>{t.s3p}</p>

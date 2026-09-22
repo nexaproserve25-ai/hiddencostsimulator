@@ -3,20 +3,21 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { font-family: 'DM Sans', 'Noto Sans Arabic', sans-serif; color: #f6f7f2; background: #050d16; font-synthesis: none; text-rendering: optimizeLegibility; }
+:root { font-family: 'DM Sans', 'Noto Sans Arabic', sans-serif; color: #1e293b; background: #f8f6f1; font-synthesis: none; text-rendering: optimizeLegibility; }
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; background: #050d16; }
+body { margin: 0; min-width: 320px; background: #f8f6f1; }
 button, input, select { font: inherit; }
 button { cursor: pointer; }
 ::selection { background: #b4ff39; color: #071018; }
-.app-shell { height: 100dvh; display: flex; flex-direction: column; overflow: hidden; background: radial-gradient(circle at 75% 8%, rgba(90, 168, 50, .15), transparent 28rem), #050d16; }
+::selection { background: rgba(180,255,58,.30); color: #0f172a; }
+.app-shell { height: 100dvh; display: flex; flex-direction: column; overflow: hidden; background: radial-gradient(circle at 75% 8%, rgba(90, 168, 50, .08), transparent 28rem), #f8f6f1; }
 input[type='number']::-webkit-inner-spin-button, input[type='number']::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 input[type='number'] { -moz-appearance: textfield; }
 .font-display { font-family: 'Manrope', 'Noto Sans Arabic', sans-serif; }
 .rtl { font-family: 'Noto Sans Arabic', 'DM Sans', sans-serif; }
 .rtl .font-display { font-family: 'Noto Sans Arabic', sans-serif; }
-.grid-texture { background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px); background-size: 56px 56px; }
-.phone-glow { box-shadow: 0 0 90px rgba(166, 255, 47, .12); }
+.grid-texture { background-image: linear-gradient(rgba(15,23,42,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,.03) 1px, transparent 1px); background-size: 56px 56px; }
+.phone-glow { box-shadow: 0 0 90px rgba(166, 255, 47, .18); }
 @keyframes float { 0%,100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-10px) rotate(-2deg); } }
 @keyframes reveal { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 .float-card { animation: float 5s ease-in-out infinite; }

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ArrowRight, BarChart3, Check, FileText, Lightbulb, Lock, PiggyBank, Sparkles, Target, TrendingUp, X } from 'lucide-react';
 import { createCheckoutSession, paymentErrorMessage, type PaymentErrorType } from '@/services/paymentService';
 import { usePayment } from '@/context/PaymentContext';
+import { useAuth } from '@/context/AuthContext';
 
 type Lang = 'en' | 'ar';
 
@@ -50,6 +51,7 @@ export function UpgradePanel({ lang, onUnlocked }: { lang: Lang; onUnlocked: () 
   const t = copy[lang];
   const isAr = lang === 'ar';
   const { paymentStatus, unlockPro, canAccess } = usePayment();
+  const { userEmail, signInWithGoogle } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
 
@@ -57,7 +59,7 @@ export function UpgradePanel({ lang, onUnlocked }: { lang: Lang; onUnlocked: () 
   if (canAccess('pdfReport')) {
     return (
       <div className="mx-auto mt-5 w-full max-w-md rounded-2xl border border-[#b4ff3a]/30 bg-[#b4ff3a]/[.08] p-4 text-center">
-        <div className="flex items-center justify-center gap-2 text-sm font-bold text-[#b4ff3a]">
+        <div className="flex items-center justify-center gap-2 text-sm font-bold text-[#5a9a32]">
           <Check size={18} /> {t.unlocked}
         </div>
         <button onClick={onUnlocked} className="mt-3 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#b4ff3a] px-5 py-3 text-sm font-bold text-[#07121b] shadow-[0_10px_30px_rgba(180,255,58,.16)] transition hover:-translate-y-0.5 hover:bg-[#c4ff63]">
@@ -67,10 +69,14 @@ export function UpgradePanel({ lang, onUnlocked }: { lang: Lang; onUnlocked: () 
     );
   }
 
-  const handleUnlock = () => {
+  const handleUnlock = async () => {
     setError(null);
+    if (!userEmail) {
+      await signInWithGoogle();
+      return;
+    }
     setProcessing(true);
-    const result = createCheckoutSession('pro');
+    const result = createCheckoutSession('pro', userEmail);
     if ('error' in result) {
       setError(result.error.message);
       setProcessing(false);
@@ -81,12 +87,12 @@ export function UpgradePanel({ lang, onUnlocked }: { lang: Lang; onUnlocked: () 
   return (
     <div className="mx-auto mt-5 w-full max-w-md rounded-2xl border border-[#b4ff3a]/30 bg-[#b4ff3a]/[.06] p-4" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
       <div className="flex items-start gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#b4ff3a]/15 text-[#b4ff3a]">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#b4ff3a]/15 text-[#5a9a32]">
           <Sparkles size={22} />
         </span>
         <div className="flex-1">
-          <b className="block text-sm font-bold text-white" style={{ textAlign: isAr ? 'right' : 'left' }}>{t.title}</b>
-          <p className="mt-1 text-xs leading-5 text-slate-300" style={{ textAlign: isAr ? 'right' : 'left' }}>{t.sub}</p>
+          <b className="block text-sm font-bold text-slate-950" style={{ textAlign: isAr ? 'right' : 'left' }}>{t.title}</b>
+          <p className="mt-1 text-xs leading-5 text-slate-800" style={{ textAlign: isAr ? 'right' : 'left' }}>{t.sub}</p>
         </div>
       </div>
 
@@ -95,8 +101,8 @@ export function UpgradePanel({ lang, onUnlocked }: { lang: Lang; onUnlocked: () 
         {t.features.map((feat, i) => {
           const Icon = FEATURE_ICONS[i] ?? Check;
           return (
-            <li key={i} className="flex items-center gap-2 text-xs text-slate-300">
-              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#b4ff3a]/10 text-[#b4ff3a]">
+            <li key={i} className="flex items-center gap-2 text-xs text-slate-800">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#b4ff3a]/15 text-[#5a9a32]">
                 <Icon size={12} />
               </span>
               <span style={{ textAlign: isAr ? 'right' : 'left' }}>{feat}</span>
@@ -122,9 +128,9 @@ export function UpgradePanel({ lang, onUnlocked }: { lang: Lang; onUnlocked: () 
 
       {/* Error display */}
       {error && (
-        <div className="mt-3 flex items-start gap-2 rounded-xl border border-orange-400/30 bg-orange-400/10 p-2.5">
-          <X size={15} className="mt-0.5 shrink-0 text-orange-400" />
-          <p className="text-xs text-orange-200" style={{ textAlign: isAr ? 'right' : 'left' }}>{error}</p>
+        <div className="mt-3 flex items-start gap-2 rounded-xl border border-orange-200 bg-orange-50 p-2.5">
+          <X size={15} className="mt-0.5 shrink-0 text-orange-600" />
+          <p className="text-xs text-orange-700" style={{ textAlign: isAr ? 'right' : 'left' }}>{error}</p>
         </div>
       )}
     </div>
@@ -139,19 +145,19 @@ export function PaymentErrorDisplay({ errorType, lang, onRetry, onDismiss }: { e
   const isAr = lang === 'ar';
   const message = paymentErrorMessage(errorType, lang);
   return (
-    <div className="mx-auto mt-4 w-full max-w-md rounded-2xl border border-orange-400/30 bg-orange-400/10 p-4" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
+    <div className="mx-auto mt-4 w-full max-w-md rounded-2xl border border-orange-200 bg-orange-50 p-4" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
       <div className="flex items-start gap-3">
-        <X size={20} className="mt-0.5 shrink-0 text-orange-400" />
+        <X size={20} className="mt-0.5 shrink-0 text-orange-600" />
         <div className="flex-1">
-          <p className="text-sm font-semibold text-orange-200" style={{ textAlign: isAr ? 'right' : 'left' }}>{message}</p>
+          <p className="text-sm font-semibold text-orange-700" style={{ textAlign: isAr ? 'right' : 'left' }}>{message}</p>
           <div className="mt-3 flex gap-2">
             {onRetry && (
-              <button onClick={onRetry} className="rounded-xl border border-orange-400/40 bg-orange-400/10 px-4 py-2 text-xs font-bold text-orange-200 transition hover:bg-orange-400/20">
+              <button onClick={onRetry} className="rounded-xl border border-orange-200 bg-orange-50 px-4 py-2 text-xs font-bold text-orange-700 transition hover:bg-orange-400/20">
                 {isAr ? 'إعادة المحاولة' : 'Try Again'}
               </button>
             )}
             {onDismiss && (
-              <button onClick={onDismiss} className="rounded-xl border border-white/15 bg-white/[.04] px-4 py-2 text-xs font-bold text-slate-300 transition hover:border-white/30">
+              <button onClick={onDismiss} className="rounded-xl border border-slate-300 bg-slate-50 px-4 py-2 text-xs font-bold text-slate-800 transition hover:border-slate-400">
                 {isAr ? 'إغلاق' : 'Dismiss'}
               </button>
             )}

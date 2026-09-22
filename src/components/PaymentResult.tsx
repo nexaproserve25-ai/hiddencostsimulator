@@ -74,20 +74,20 @@ export function PaymentSuccess({ lang, onContinue, onFailed }: { lang: Lang; onC
       <div className="max-w-md text-center">
         {!verified && !error && (
           <>
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#b4ff3a]/30 bg-[#b4ff3a]/10">
-              <Loader2 size={32} className="animate-spin text-[#b4ff3a]" />
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#b4ff3a]/30 bg-[#b4ff3a]/15">
+              <Loader2 size={32} className="animate-spin text-[#5a9a32]" />
             </div>
-            <p className="text-base font-bold text-slate-200">{isAr ? 'جارٍ التحقق...' : 'Verifying payment...'}</p>
+            <p className="text-base font-bold text-slate-800">{isAr ? 'جارٍ التحقق...' : 'Verifying payment...'}</p>
           </>
         )}
 
         {verified && (
           <>
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#b4ff3a]/30 bg-[#b4ff3a]/10">
-              <Check size={32} className="text-[#b4ff3a]" />
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-[#b4ff3a]/30 bg-[#b4ff3a]/15">
+              <Check size={32} className="text-[#5a9a32]" />
             </div>
-            <h1 className="font-display text-2xl font-extrabold text-white">{t.successTitle}</h1>
-            <p className="mt-2 text-sm text-slate-400">{t.successSub}</p>
+            <h1 className="font-display text-2xl font-extrabold text-slate-950">{t.successTitle}</h1>
+            <p className="mt-2 text-sm text-slate-600">{t.successSub}</p>
             <button onClick={onContinue} className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#b4ff3a] px-5 py-3 text-sm font-bold text-[#07121b] shadow-[0_10px_30px_rgba(180,255,58,.16)] transition hover:-translate-y-0.5 hover:bg-[#c4ff63]">
               {t.successBtn}
             </button>
@@ -96,12 +96,12 @@ export function PaymentSuccess({ lang, onContinue, onFailed }: { lang: Lang; onC
 
         {error && (
           <>
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-orange-400/30 bg-orange-400/10">
-              <X size={32} className="text-orange-400" />
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-orange-200 bg-orange-50">
+              <X size={32} className="text-orange-600" />
             </div>
-            <h1 className="font-display text-2xl font-extrabold text-white">{t.errorTitle}</h1>
-            <p className="mt-2 text-sm text-slate-400">{t.errorSub}</p>
-            <button onClick={onFailed} className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/[.04] px-5 py-3 text-sm font-bold text-white transition hover:border-[#b4ff3a]/60">
+            <h1 className="font-display text-2xl font-extrabold text-slate-950">{t.errorTitle}</h1>
+            <p className="mt-2 text-sm text-slate-600">{t.errorSub}</p>
+            <button onClick={onFailed} className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-slate-300 bg-slate-50 px-5 py-3 text-sm font-bold text-slate-950 transition hover:border-[#b4ff3a]/60">
               {t.homeBtn}
             </button>
           </>
@@ -127,11 +127,11 @@ export function PaymentCancel({ lang, onHome }: { lang: Lang; onHome: () => void
     <div className="app-shell grid-texture flex flex-1 flex-col items-center justify-center px-5" style={{ direction: isAr ? 'rtl' : 'ltr' }}>
       <div className="max-w-md text-center">
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-400/30 bg-slate-400/10">
-          <X size={32} className="text-slate-400" />
+          <X size={32} className="text-slate-600" />
         </div>
-        <h1 className="font-display text-2xl font-extrabold text-white">{t.cancelTitle}</h1>
-        <p className="mt-2 text-sm text-slate-400">{t.cancelSub}</p>
-        <button onClick={onHome} className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/[.04] px-5 py-3 text-sm font-bold text-white transition hover:border-[#b4ff3a]/60">
+        <h1 className="font-display text-2xl font-extrabold text-slate-950">{t.cancelTitle}</h1>
+        <p className="mt-2 text-sm text-slate-600">{t.cancelSub}</p>
+        <button onClick={onHome} className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-slate-300 bg-slate-50 px-5 py-3 text-sm font-bold text-slate-950 transition hover:border-[#b4ff3a]/60">
           {t.cancelBtn}
         </button>
       </div>
@@ -146,14 +146,14 @@ export function PaymentCancel({ lang, onHome }: { lang: Lang; onHome: () => void
 export function PaymentHeader({ lang }: { lang: Lang }) {
   const isAr = lang === 'ar';
   return (
-    <header className="relative z-10 shrink-0 border-b border-white/[.07]">
+    <header className="relative z-10 shrink-0 border-b border-slate-200/70 bg-white/60 backdrop-blur-sm">
       <div className="mx-auto flex max-w-7xl items-center gap-2 px-5 py-2 lg:px-10">
         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#b4ff3a] text-[#061019] shadow-[0_0_20px_rgba(180,255,58,.25)]">
           <Zap size={20} strokeWidth={3} fill="currentColor" />
         </span>
         <span className="font-display leading-none">
-          <strong className="block text-[15px] font-extrabold tracking-tight">Hidden Cost</strong>
-          <small className="block pt-0.5 text-[10px] font-medium text-slate-300">{isAr ? 'الدفع' : 'Checkout'}</small>
+          <strong className="block text-[15px] font-extrabold tracking-tight text-slate-950">Hidden Cost</strong>
+          <small className="block pt-0.5 text-[10px] font-semibold text-slate-600">{isAr ? 'الدفع' : 'Checkout'}</small>
         </span>
       </div>
     </header>

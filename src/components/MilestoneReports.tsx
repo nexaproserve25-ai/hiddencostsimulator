@@ -50,7 +50,7 @@ function StatCard({ label, value, sub, color }: { label: string; value: string; 
   return (
     <div className="rounded-2xl border p-4 text-center" style={{ borderColor: `${color}33`, background: `${color}0D` }}>
       <div className="text-2xl font-extrabold" style={{ color }}>{value}</div>
-      <div className="mt-1 text-[11px] font-semibold text-slate-400">{label}</div>
+      <div className="mt-1 text-[11px] font-semibold text-slate-600">{label}</div>
       {sub && <div className="mt-0.5 text-[10px] text-slate-500">{sub}</div>}
     </div>
   );
@@ -70,20 +70,20 @@ export function MilestoneReports({ data, lang, onDownloadPDF }: { data: Dashboar
       {/* Day 30 */}
       <div className="rounded-2xl border border-[#b4ff3a]/20 bg-[#b4ff3a]/[.04] p-5">
         <div className="flex items-center gap-3">
-          <Calendar size={22} className="text-[#b4ff3a]" />
+          <Calendar size={22} className="text-[#5a9a32]" />
           <div>
-            <h3 className="font-display text-base font-extrabold text-white" style={{ textAlign: isAr ? 'right' : 'left' }}>{t.day30}</h3>
-            <p className="text-xs text-slate-400">{t.buildingAwareness}</p>
+            <h3 className="font-display text-base font-extrabold text-slate-950" style={{ textAlign: isAr ? 'right' : 'left' }}>{t.day30}</h3>
+            <p className="text-xs text-slate-600">{t.buildingAwareness}</p>
           </div>
         </div>
         {data.day >= 30 && day30Projected > 0 ? (
           <div className="mt-4">
             <div className="rounded-xl border border-[#b4ff3a]/20 bg-[#b4ff3a]/[.06] p-4 text-center">
-              <p className="text-xs text-slate-300">{t.potentialRecovery}</p>
-              <div className="mt-1 font-display text-3xl font-extrabold text-[#b4ff3a]">${day30Projected.toFixed(0)}</div>
+              <p className="text-xs text-slate-800">{t.potentialRecovery}</p>
+              <div className="mt-1 font-display text-3xl font-extrabold text-[#5a9a32]">${day30Projected.toFixed(0)}</div>
             </div>
-            <p className="mt-3 text-sm leading-6 text-slate-300" style={{ textAlign: isAr ? 'right' : 'left' }}>
-              {TIMELINE_MILESTONES.day30.projectedMessage(`$${day30Projected.toFixed(0)}`)}
+            <p className="mt-3 text-sm leading-6 text-slate-800" style={{ textAlign: isAr ? 'right' : 'left' }}>
+              {TIMELINE_MILESTONES.day30.projectedMessage(`${day30Projected.toFixed(0)}`)}
             </p>
           </div>
         ) : (
@@ -92,15 +92,15 @@ export function MilestoneReports({ data, lang, onDownloadPDF }: { data: Dashboar
       </div>
 
       {/* Day 90 */}
-      <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/[.04] p-5">
+      <div className="rounded-2xl border border-cyan-200 bg-cyan-50 p-5">
         <div className="flex items-center gap-3">
-          <TrendingUp size={22} className="text-cyan-300" />
+          <TrendingUp size={22} className="text-cyan-600" />
           <div>
-            <h3 className="font-display text-base font-extrabold text-white" style={{ textAlign: isAr ? 'right' : 'left' }}>{t.day90}</h3>
+            <h3 className="font-display text-base font-extrabold text-slate-950" style={{ textAlign: isAr ? 'right' : 'left' }}>{t.day90}</h3>
           </div>
         </div>
         {data.day >= 90 ? (
-          <p className="mt-3 text-sm leading-6 text-slate-200" style={{ textAlign: isAr ? 'right' : 'left' }}>
+          <p className="mt-3 text-sm leading-6 text-slate-800" style={{ textAlign: isAr ? 'right' : 'left' }}>
             {TIMELINE_MILESTONES.day90.heroStatement}
           </p>
         ) : (
@@ -109,33 +109,33 @@ export function MilestoneReports({ data, lang, onDownloadPDF }: { data: Dashboar
       </div>
 
       {/* Day 180 */}
-      <div className="rounded-2xl border border-orange-400/20 bg-orange-400/[.04] p-5">
+      <div className="rounded-2xl border border-orange-200 bg-orange-50 p-5">
         <div className="flex items-center gap-3">
-          <Award size={22} className="text-orange-300" />
+          <Award size={22} className="text-orange-600" />
           <div>
-            <h3 className="font-display text-base font-extrabold text-white" style={{ textAlign: isAr ? 'right' : 'left' }}>{t.day180}</h3>
+            <h3 className="font-display text-base font-extrabold text-slate-950" style={{ textAlign: isAr ? 'right' : 'left' }}>{t.day180}</h3>
           </div>
         </div>
         {data.day >= 180 ? (
           <div className="mt-4">
-            <p className="text-sm leading-6 text-slate-200" style={{ textAlign: isAr ? 'right' : 'left' }}>
+            <p className="text-sm leading-6 text-slate-800" style={{ textAlign: isAr ? 'right' : 'left' }}>
               {TIMELINE_MILESTONES.day180.finalStatement}
             </p>
             <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className="rounded-xl border border-white/10 bg-white/[.04] p-3 text-center">
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 text-center">
                 <p className="text-[10px] font-bold uppercase text-slate-500">{t.day1}</p>
-                <div className="mt-1 text-lg font-extrabold text-slate-300">${data.baselineMonthlySpend.toFixed(0)}/mo</div>
+                <div className="mt-1 text-lg font-extrabold text-slate-800">${data.baselineMonthlySpend.toFixed(0)}/mo</div>
               </div>
               <div className="rounded-xl border border-[#b4ff3a]/20 bg-[#b4ff3a]/[.06] p-3 text-center">
-                <p className="text-[10px] font-bold uppercase text-[#b4ff3a]">{t.day180Label}</p>
-                <div className="mt-1 text-lg font-extrabold text-[#b4ff3a]">${data.currentMonthlySpend.toFixed(0)}/mo</div>
+                <p className="text-[10px] font-bold uppercase text-[#5a9a32]">{t.day180Label}</p>
+                <div className="mt-1 text-lg font-extrabold text-[#5a9a32]">${data.currentMonthlySpend.toFixed(0)}/mo</div>
               </div>
             </div>
             <div className="mt-3 grid grid-cols-2 gap-3">
               <StatCard label={t.moneyRecovered} value={`$${data.moneyRecovered.toFixed(0)}`} color="#b4ff3a" />
               <StatCard label={t.timeRecovered} value={`${data.timeRecoveredHours}h ${data.timeRecoveredMinutes}m`} color="#22d3ee" />
             </div>
-            <button onClick={onDownloadPDF} className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-orange-400/20 border border-orange-400/40 px-5 py-3 text-sm font-bold text-orange-200 transition hover:bg-orange-400/30">
+            <button onClick={onDownloadPDF} className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-orange-400/20 border border-orange-200 px-5 py-3 text-sm font-bold text-orange-700 transition hover:bg-orange-400/30">
               <FileText size={18} /> {t.downloadReport}
             </button>
           </div>

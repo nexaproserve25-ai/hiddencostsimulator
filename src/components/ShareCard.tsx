@@ -86,40 +86,40 @@ export function ShareCard({ lang, workHoursPerYear, onHome }: { lang: Lang; work
 
   return (
     <div className="app-shell grid-texture" style={{ direction: dir }}>
-      <header className="relative z-10 shrink-0 border-b border-white/[.07]">
+      <header className="relative z-10 shrink-0 border-b border-slate-200/70 bg-white/60 backdrop-blur-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-2 lg:px-10 lg:py-2.5">
           <button onClick={onHome} className="flex items-center gap-2 text-left">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#b4ff3a] text-[#061019] shadow-[0_0_20px_rgba(180,255,58,.25)]"><Zap size={20} strokeWidth={3} fill="currentColor" /></span>
-            <span className="font-display leading-none"><strong className="block text-[15px] font-extrabold tracking-tight">{isAr ? 'التكلفة الخفية' : 'Hidden Cost'}</strong><small className="block pt-0.5 text-[10px] font-medium text-slate-300">{isAr ? 'بطاقة المشاركة' : 'Share Card'}</small></span>
+            <span className="font-display leading-none"><strong className="block text-[15px] font-extrabold tracking-tight text-slate-950">{isAr ? 'التكلفة الخفية' : 'Hidden Cost'}</strong><small className="block pt-0.5 text-[10px] font-semibold text-slate-600">{isAr ? 'بطاقة المشاركة' : 'Share Card'}</small></span>
           </button>
-          <button onClick={onHome} className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[.03] px-4 py-2 text-sm font-semibold text-slate-300 transition hover:border-[#b4ff3a]/50 hover:text-white">
+          <button onClick={onHome} className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-[#b4ff3a]/50 hover:text-slate-950">
             <ArrowLeft size={16} style={{ transform: isAr ? 'scaleX(-1)' : 'none' }} />{t.backHome}
           </button>
         </div>
       </header>
       <main className="flex-1 overflow-y-auto">
         <div className="mx-auto max-w-md px-5 py-6 lg:py-8">
-          <h1 className="font-display text-2xl font-extrabold tracking-tight text-white" style={{ textAlign: isAr ? 'right' : 'left' }}>{t.title}</h1>
-          <p className="mt-1 text-sm text-slate-400">{t.subtitle}</p>
+          <h1 className="font-display text-2xl font-extrabold tracking-tight text-slate-950" style={{ textAlign: isAr ? 'right' : 'left' }}>{t.title}</h1>
+          <p className="mt-1 text-sm text-slate-600">{t.subtitle}</p>
 
           {/* Share card */}
           <div className="mx-auto mt-6 w-fit">
-            <div ref={cardRef} style={{ width: '380px', height: '600px', background: 'linear-gradient(160deg, #071522 0%, #0b1a28 45%, #112a2b 100%)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 20px 50px rgba(0,0,0,0.5)', padding: '28px 24px', display: 'flex', flexDirection: 'column', fontFamily: 'system-ui, -apple-system, sans-serif', direction: dir, position: 'relative', overflow: 'hidden' }}>
+            <div ref={cardRef} style={{ width: '380px', height: '600px', background: 'linear-gradient(160deg, #f8f6f1 0%, #ffffff 45%, #f0ede5 100%)', borderRadius: '24px', border: '1px solid rgba(15,23,42,0.08)', boxShadow: '0 20px 50px rgba(0,0,0,0.12)', padding: '28px 24px', display: 'flex', flexDirection: 'column', fontFamily: 'system-ui, -apple-system, sans-serif', direction: dir, position: 'relative', overflow: 'hidden' }}>
               <div style={{ position: 'absolute', top: '-80px', right: isAr ? 'auto' : '-80px', left: isAr ? '-80px' : 'auto', width: '240px', height: '240px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(180,255,58,0.08) 0%, transparent 70%)' }} />
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '18px', position: 'relative', flexDirection: isAr ? 'row-reverse' : 'row' }}>
                 <div style={{ width: '28px', height: '28px', borderRadius: '7px', background: '#b4ff3a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><span style={{ fontSize: '15px', fontWeight: 800, color: '#061019' }}>⚡</span></div>
-                <div><div style={{ fontSize: '13px', fontWeight: 800, color: '#f6f7f2', lineHeight: 1, textAlign: isAr ? 'right' : 'left' }}>{t.cardHeader}</div><div style={{ fontSize: '8px', color: '#9aaab5', marginTop: '2px', textAlign: isAr ? 'right' : 'left' }}>{t.cardSub}</div></div>
+                <div><div style={{ fontSize: '13px', fontWeight: 800, color: '#0f172a', lineHeight: 1, textAlign: isAr ? 'right' : 'left' }}>{t.cardHeader}</div><div style={{ fontSize: '8px', color: '#475569', marginTop: '2px', textAlign: isAr ? 'right' : 'left' }}>{t.cardSub}</div></div>
               </div>
               <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: isAr ? '0' : '0.18em', textTransform: isAr ? 'none' : 'uppercase', color: '#b4ff3a', marginBottom: '5px', position: 'relative', textAlign: isAr ? 'right' : 'left' }}>{t.cardBadge}</div>
               <div style={{ fontSize: '48px', fontWeight: 800, color: '#b4ff3a', lineHeight: 1.05, marginBottom: '3px', position: 'relative', textAlign: isAr ? 'right' : 'left' }}>{workHoursPerYear}</div>
               <div style={{ fontSize: '12px', fontWeight: 600, color: '#9aaab5', marginBottom: '20px', position: 'relative', textAlign: isAr ? 'right' : 'left' }}>{t.cardLabel}</div>
               <div style={{ marginTop: 'auto', marginBottom: '14px', padding: '14px 16px', borderRadius: '14px', background: 'rgba(180,255,58,0.06)', border: '1px solid rgba(180,255,58,0.15)', position: 'relative' }}>
-                <div style={{ fontSize: '14px', fontWeight: 600, lineHeight: 1.5, color: '#e2e8f0', textAlign: isAr ? 'right' : 'left' }}>{t.prompt}</div>
+                <div style={{ fontSize: '14px', fontWeight: 600, lineHeight: 1.5, color: '#334155', textAlign: isAr ? 'right' : 'left' }}>{t.prompt}</div>
                 <div style={{ fontSize: '12px', fontWeight: 700, color: '#b4ff3a', marginTop: '8px', textAlign: isAr ? 'right' : 'left' }}>{t.cardCta}</div>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '11px', position: 'relative', flexDirection: isAr ? 'row-reverse' : 'row' }}>
-                <span style={{ fontSize: '8px', color: '#64748b' }}>CARD</span>
-                <span style={{ fontSize: '10px', fontWeight: 600, color: '#9aaab5' }}>hiddencostsimulator.com</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(15,23,42,0.08)', paddingTop: '11px', position: 'relative', flexDirection: isAr ? 'row-reverse' : 'row' }}>
+                <span style={{ fontSize: '8px', color: '#475569' }}>CARD</span>
+                <span style={{ fontSize: '10px', fontWeight: 600, color: '#475569' }}>hiddencostsimulator.com</span>
               </div>
             </div>
           </div>
@@ -129,11 +129,11 @@ export function ShareCard({ lang, workHoursPerYear, onHome }: { lang: Lang; work
             <button onClick={downloadCard} disabled={downloading} className="inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl bg-[#b4ff3a] px-5 py-3 text-sm font-bold text-[#07121b] shadow-[0_10px_30px_rgba(180,255,58,.16)] transition hover:-translate-y-0.5 hover:bg-[#c4ff63] disabled:opacity-50">
               <Download size={17} /> {downloading ? (isAr ? 'جارٍ التحميل...' : 'Downloading...') : t.download}
             </button>
-            <button onClick={() => setShowShare(true)} className="inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/[.04] px-5 py-3 text-sm font-bold text-white transition hover:border-[#b4ff3a]/60">
+            <button onClick={() => setShowShare(true)} className="inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-2xl border border-slate-300 bg-slate-50 px-5 py-3 text-sm font-bold text-slate-950 transition hover:border-[#b4ff3a]/60">
               <Share2 size={17} /> {t.share}
             </button>
           </div>
-          <button onClick={copyLink} className={`mt-2.5 flex w-full items-center justify-center gap-2.5 rounded-2xl border px-5 py-3 text-sm font-bold transition ${copied ? 'border-[#b4ff3a] bg-[#b4ff3a]/10 text-[#b4ff3a]' : 'border-white/10 bg-white/[.04] text-slate-300 hover:border-white/25'}`}>
+          <button onClick={copyLink} className={`mt-2.5 flex w-full items-center justify-center gap-2.5 rounded-2xl border px-5 py-3 text-sm font-bold transition ${copied ? 'border-[#b4ff3a] bg-[#b4ff3a]/15 text-[#5a9a32]' : 'border-slate-200 bg-slate-50 text-slate-800 hover:border-slate-300'}`}>
             {copied ? <><Check size={17} />{t.copied}</> : <><Link2 size={17} />{t.copyLink}</>}
           </button>
         </div>
@@ -141,20 +141,20 @@ export function ShareCard({ lang, workHoursPerYear, onHome }: { lang: Lang; work
 
       {showShare && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4" onClick={() => setShowShare(false)}>
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-md" />
-          <div className="relative w-full max-w-sm rounded-2xl border border-white/10 bg-[#0b1a28] p-5 shadow-2xl" onClick={(e) => e.stopPropagation()} style={{ direction: dir }}>
-            <button onClick={() => setShowShare(false)} className={isAr ? 'absolute left-4 top-4 text-slate-400 hover:text-white' : 'absolute right-4 top-4 text-slate-400 hover:text-white'} aria-label={t.close}><X size={20} /></button>
+          <div className="absolute inset-0 bg-slate-900/30 backdrop-blur-md" />
+          <div className="relative w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl" onClick={(e) => e.stopPropagation()} style={{ direction: dir }}>
+            <button onClick={() => setShowShare(false)} className={isAr ? 'absolute left-4 top-4 text-slate-500 hover:text-slate-800' : 'absolute right-4 top-4 text-slate-500 hover:text-slate-800'} aria-label={t.close}><X size={20} /></button>
             <h2 className="font-display text-lg font-extrabold" style={{ textAlign: isAr ? 'right' : 'left' }}>{t.shareTitle}</h2>
-            <p className="mt-1 text-xs text-slate-400" style={{ textAlign: isAr ? 'right' : 'left' }}>{t.shareSub}</p>
+            <p className="mt-1 text-xs text-slate-600" style={{ textAlign: isAr ? 'right' : 'left' }}>{t.shareSub}</p>
             <div className="mt-4 grid grid-cols-2 gap-2.5">
-              <a href={`https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2.5 rounded-xl border border-white/10 bg-white/[.04] px-3.5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-white/25"><span className="text-[#25D366]"><IconWhatsApp size={20} /></span>WhatsApp</a>
-              <a href={`https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2.5 rounded-xl border border-white/10 bg-white/[.04] px-3.5 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:border-white/25"><span className="text-white"><IconX size={20} /></span>{isAr ? 'إكس' : 'X'}</a>
+              <a href={`https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm font-bold text-slate-950 transition hover:-translate-y-0.5 hover:border-slate-300"><span className="text-[#25D366]"><IconWhatsApp size={20} /></span>WhatsApp</a>
+              <a href={`https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2.5 rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm font-bold text-slate-950 transition hover:-translate-y-0.5 hover:border-slate-300"><span className="text-slate-950"><IconX size={20} /></span>{isAr ? 'إكس' : 'X'}</a>
             </div>
           </div>
         </div>
       )}
 
-      {toast && <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 animate-fade-in rounded-2xl border border-[#b4ff3a]/30 bg-[#0b1a28] px-5 py-3 shadow-2xl"><div className="flex items-center gap-2 text-sm font-bold text-[#b4ff3a]"><Check size={18} />{toast}</div></div>}
+      {toast && <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 animate-fade-in rounded-2xl border border-[#b4ff3a]/30 bg-white px-5 py-3 shadow-2xl"><div className="flex items-center gap-2 text-sm font-bold text-[#5a9a32]"><Check size={18} />{toast}</div></div>}
     </div>
   );
 }
